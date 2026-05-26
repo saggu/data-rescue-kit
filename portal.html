@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Customer portal for CRM Import Rescue reusable workflow contracts and run history."
+    />
+    <title>CRM Import Rescue Portal</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="src/siteConfig.js" defer></script>
+    <script src="src/analytics.js" defer></script>
+  </head>
+  <body class="landing-page portal-page">
+    <header class="landing-nav">
+      <a class="nav-brand" href="index.html">
+        <span class="data-mark compact" aria-hidden="true">
+          <span></span><span></span><span></span> <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </span>
+        <span>CRM Import Rescue</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="index.html#offer">Offer</a>
+        <a href="tool.html" data-analytics="nav_try_tool">Try Tool</a>
+        <a href="start.html" data-analytics="nav_start_click">Start</a>
+      </nav>
+    </header>
+
+    <main class="portal-layout">
+      <section class="portal-hero">
+        <p class="eyebrow">Customer portal</p>
+        <h1>Track reusable workflow contracts without storing raw CSVs.</h1>
+        <p>
+          Paid workflow customers can track contract versions, schema checks, run history, and
+          change requests. The portal stores metadata such as column names and issue counts, not raw
+          contact rows.
+        </p>
+      </section>
+
+      <section id="authPanel" class="portal-card">
+        <div class="portal-card-header">
+          <div>
+            <p class="eyebrow">Sign in</p>
+            <h2>Access workflow tracking</h2>
+          </div>
+          <span id="portalMode" class="badge">checking</span>
+        </div>
+        <form id="authForm" class="portal-form">
+          <label class="field">
+            <span>Email</span>
+            <input
+              id="portalEmail"
+              type="text"
+              inputmode="email"
+              autocomplete="email"
+              pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+              required
+            />
+          </label>
+          <button type="submit">Send magic link</button>
+        </form>
+        <p id="authStatus" class="form-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="portalWorkspace" class="portal-workspace" hidden>
+        <div class="portal-card portal-session-row">
+          <div>
+            <p class="eyebrow">Signed in</p>
+            <h2 id="sessionEmail">Customer</h2>
+          </div>
+          <button id="signOutButton" class="secondary-action light" type="button">Sign out</button>
+        </div>
+
+        <section class="portal-metrics" aria-label="Portal metrics">
+          <div>
+            <span>Workflows</span>
+            <strong id="workflowCount">0</strong>
+          </div>
+          <div>
+            <span>Runs</span>
+            <strong id="runCount">0</strong>
+          </div>
+          <div>
+            <span>Open changes</span>
+            <strong id="changeCount">0</strong>
+          </div>
+        </section>
+
+        <section class="portal-card">
+          <div class="portal-card-header">
+            <div>
+              <p class="eyebrow">Contracts</p>
+              <h2>Reusable workflows</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Workflow</th>
+                  <th>Version</th>
+                  <th>CRM</th>
+                  <th>Status</th>
+                  <th>Included fixes</th>
+                </tr>
+              </thead>
+              <tbody id="workflowRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="portal-card">
+          <div class="portal-card-header">
+            <div>
+              <p class="eyebrow">Run history</p>
+              <h2>Recent schema checks</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Workflow</th>
+                  <th>Status</th>
+                  <th>Rows</th>
+                  <th>Schema changes</th>
+                </tr>
+              </thead>
+              <tbody id="runRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="portal-card">
+          <div class="portal-card-header">
+            <div>
+              <p class="eyebrow">Updates</p>
+              <h2>Change requests</h2>
+            </div>
+          </div>
+          <form id="changeForm" class="portal-form portal-form-inline">
+            <label class="field">
+              <span>Workflow ID</span>
+              <input id="changeWorkflowId" placeholder="sample-webinar-leads-hubspot" />
+            </label>
+            <label class="field">
+              <span>Request</span>
+              <input id="changeTitle" placeholder="Add UTM campaign mapping" required />
+            </label>
+            <label class="field">
+              <span>Notes</span>
+              <input id="changeNotes" placeholder="New export includes two UTM columns." />
+            </label>
+            <button type="submit">Request update</button>
+          </form>
+          <p id="changeStatus" class="form-status" role="status" aria-live="polite"></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Created</th>
+                  <th>Workflow</th>
+                  <th>Request</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="changeRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="src/customerStore.js"></script>
+    <script src="src/portal.js"></script>
+  </body>
+</html>

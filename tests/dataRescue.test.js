@@ -78,6 +78,21 @@ assert.equal(workflow.matchedColumns.length, workflowConfig.expectedColumns.leng
 assert.equal(workflow.extraColumns.length, 0);
 assert.equal(workflow.support.status, "active");
 
+const runSummary = rescue.buildWorkflowRunSummary({
+  table,
+  analysis,
+  crm,
+  workflow,
+  fileName: "webinar-leads.csv",
+  createdAt: "2026-06-01T12:00:00.000Z",
+});
+assert.equal(runSummary.fileName, "webinar-leads.csv");
+assert.equal(runSummary.workflowContractId, "monthly-webinar-hubspot");
+assert.equal(runSummary.workflowStatus, "matched");
+assert.equal(runSummary.rowCount, 4);
+assert.deepEqual(runSummary.columnNames, table.headers);
+assert.equal(runSummary.issueCounts.workflow_scope, 0);
+
 const changedTable = rescue.parseDelimited(`${input}\n`, ",");
 changedTable.headers.push("UTM Campaign");
 changedTable.rows = changedTable.rows.map((row) => row.concat("spring-webinar"));

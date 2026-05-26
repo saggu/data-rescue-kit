@@ -29,6 +29,7 @@ This is no longer positioned as a generic data cleaning tool. The wedge is speci
 - `start.html` is the lead intake page. It builds an email draft from the submitted form.
 - `sample-output.html` shows the buyer-facing sample deliverables.
 - `tool.html` is the working CRM import audit tool.
+- `portal.html` is the customer portal for paid workflow contracts and run history.
 - `.github/workflows/pages.yml` deploys the static site to GitHub Pages on every push to `main`.
 
 The app includes a dirty CRM sample dataset at `samples/crm_contacts_dirty.csv`.
@@ -38,6 +39,10 @@ The sample reusable workflow contract is at `samples/sample-workflow-config-hubs
 
 The intake email destination, lead endpoint, and optional analytics endpoint are configured in `src/siteConfig.js`.
 The default lead endpoint uses FormSubmit AJAX, which requires the owner email to confirm the first submission.
+
+The customer portal can run in local demo mode without a backend. For production auth and tracking,
+create a Supabase project, run `supabase/schema.sql`, and set `supabaseUrl` plus
+`supabaseAnonKey` in `src/siteConfig.js`.
 
 ## Funnel Events
 

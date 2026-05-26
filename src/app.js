@@ -78,6 +78,7 @@
       "workflowInput",
       "loadSampleWorkflow",
       "clearWorkflow",
+      "saveWorkflowRun",
       "workflowStatusLine",
       "downloadCsv",
       "downloadReport",
@@ -120,6 +121,7 @@
     );
     els.loadSampleWorkflow.addEventListener("click", () => setWorkflowConfig(SAMPLE_WORKFLOW));
     els.clearWorkflow.addEventListener("click", clearWorkflow);
+    els.saveWorkflowRun.addEventListener("click", saveWorkflowRun);
     els.downloadCsv.addEventListener("click", downloadCleanCsv);
     els.downloadReport.addEventListener("click", downloadReport);
     els.downloadIssues.addEventListener("click", downloadIssueCsv);
@@ -483,6 +485,34 @@
     els.downloadReport.disabled = !hasOutput;
     els.downloadIssues.disabled = !hasOutput;
     els.copyReport.disabled = !hasOutput;
+    els.saveWorkflowRun.disabled = !state.workflow;
+  }
+
+  async function saveWorkflowRun() {
+    if (!state.workflow) {
+      setWorkflowStatus("Load a workflow config before saving run metadata.", true);
+      return;
+    }
+    if (!window.CrmCustomerStore || !rescue.buildWorkflowRunSummary) {
+      setWorkflowStatus("Customer portal storage is not available.", true);
+      return;
+    }
+
+    const store = window.CrmCustomerStore.createStore();
+    const summary = rescue.buildWorkflowRunSummary({
+      table: state.table,
+      analysis: state.analysis,
+      crm: state.crm,
+      workflow: state.workflow,
+      fileName: state.fileName,
+    });
+
+    try {
+      const result = await store.recordRun(summary);
+      setWorkflowStatus(result.message);
+    } catch (error) {
+      setWorkflowStatus(error.message || "Could not save run metadata.", true);
+    }
   }
 
   function downloadCleanCsv() {

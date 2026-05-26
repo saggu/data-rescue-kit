@@ -822,6 +822,35 @@
     };
   }
 
+  function buildWorkflowRunSummary(context) {
+    const input = context || {};
+    const table = input.table || {};
+    const analysis = input.analysis || {};
+    const crm = input.crm || null;
+    const workflow = input.workflow || null;
+    const fileName = stringOrDefault(input.fileName, "data.csv");
+    const issueCounts = countRunIssues(analysis, crm, workflow);
+
+    return {
+      fileName,
+      createdAt: input.createdAt || new Date().toISOString(),
+      workflowContractId: workflow ? workflow.config.workflowId : "",
+      workflowName: workflow ? workflow.config.workflowName : "",
+      workflowVersion: workflow ? workflow.config.version : "",
+      workflowStatus: workflow ? workflow.status : "unscoped",
+      workflowStatusLabel: workflow ? workflow.statusLabel : "No workflow loaded",
+      crmTarget: workflow ? workflow.config.crmTarget : crm ? crm.presetLabel : "",
+      sourceFormat: workflow ? workflow.config.sourceFormat : "",
+      rowCount: Array.isArray(table.rows) ? table.rows.length : analysis.rowCount || 0,
+      columnCount: Array.isArray(table.headers) ? table.headers.length : analysis.columnCount || 0,
+      columnNames: Array.isArray(table.headers) ? table.headers.slice() : [],
+      missingExpectedColumns: workflow ? workflow.missingExpectedColumns.slice() : [],
+      missingRequiredColumns: workflow ? workflow.missingRequiredColumns.slice() : [],
+      extraColumns: workflow ? workflow.extraColumns.slice() : [],
+      issueCounts,
+    };
+  }
+
   function buildMarkdownReport(table, analysis, cleaned, options) {
     const opts = options || {};
     const crm = opts.crm || null;
@@ -1015,6 +1044,35 @@
     }
 
     return { headers, rows };
+  }
+
+  function countRunIssues(analysis, crm, workflow) {
+    const counts = {
+      high: 0,
+      medium: 0,
+      low: 0,
+      source: 0,
+      crm_export: 0,
+      workflow_scope: 0,
+    };
+    for (const issue of (analysis && analysis.issues) || []) {
+      incrementIssueCounts(counts, issue.severity, "source");
+    }
+    for (const issue of (crm && crm.issues) || []) {
+      incrementIssueCounts(counts, issue.severity, "crm_export");
+    }
+    for (const issue of (workflow && workflow.issues) || []) {
+      incrementIssueCounts(counts, issue.severity, "workflow_scope");
+    }
+    return counts;
+  }
+
+  function incrementIssueCounts(counts, severity, stage) {
+    const normalizedSeverity = counts[severity] == null ? "low" : severity;
+    counts[normalizedSeverity] += 1;
+    if (counts[stage] != null) {
+      counts[stage] += 1;
+    }
   }
 
   function addColumnIssues(table, analysis, addIssue) {
@@ -1689,6 +1747,7 @@
     analyzeCrmReadiness,
     normalizeWorkflowConfig,
     evaluateWorkflowContract,
+    buildWorkflowRunSummary,
     buildMarkdownReport,
     buildIssueExport,
     normalizeHeader,
