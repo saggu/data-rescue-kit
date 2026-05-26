@@ -21,9 +21,11 @@ This is no longer positioned as a generic data cleaning tool. The wedge is speci
 - Generates a Markdown report that can be sent to a prospect or client.
 - Runs fully in the browser. No upload server and no API key.
 
-## Run
+## Pages
 
-Open `index.html` in a browser.
+- `index.html` is the sales landing page.
+- `tool.html` is the working CRM import audit tool.
+- `.github/workflows/pages.yml` deploys the static site to GitHub Pages on every push to `main`.
 
 The app includes a dirty CRM sample dataset at `samples/crm_contacts_dirty.csv`.
 
@@ -37,6 +39,10 @@ To regenerate it:
 python3 -m http.server 4173
 npm run record
 ```
+
+## Prospecting
+
+See `PROSPECTS.md` for the first outreach segments, search queries, and partner targets.
 
 ## Service Offer
 

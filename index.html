@@ -3,184 +3,110 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Fixed-scope CRM import cleanup for HubSpot, Salesforce, and Airtable contact CSVs.">
     <title>CRM Import Rescue</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
-    <main class="app-shell">
-      <aside class="side-panel">
-        <div class="brand-row">
-          <div class="data-mark" aria-hidden="true">
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
+  <body class="landing-page">
+    <header class="landing-nav">
+      <a class="nav-brand" href="index.html">
+        <span class="data-mark compact" aria-hidden="true">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </span>
+        <span>CRM Import Rescue</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#offer">Offer</a>
+        <a href="#demo">Demo</a>
+        <a href="tool.html">Try Tool</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="landing-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">HubSpot, Salesforce, and Airtable contact imports</p>
+          <h1>Clean the messy contact CSV before it breaks your CRM import.</h1>
+          <p class="hero-lede">
+            I find duplicate contacts, bad emails, missing required fields, broken phone numbers,
+            and unmapped columns before your team uploads the file.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="https://github.com/saggu/data-rescue-kit/issues/new?title=CRM%20Import%20Rescue">Book a $500 rescue</a>
+            <a class="secondary-link" href="tool.html">Try the audit tool</a>
           </div>
-          <div>
-            <h1>CRM Import Rescue</h1>
-            <p>Clean contacts before HubSpot, Salesforce, or Airtable import.</p>
-          </div>
+          <dl class="proof-strip" aria-label="Service highlights">
+            <div>
+              <dt>48-72h</dt>
+              <dd>typical turnaround</dd>
+            </div>
+            <div>
+              <dt>$500+</dt>
+              <dd>fixed-scope start</dd>
+            </div>
+            <div>
+              <dt>3 CRMs</dt>
+              <dd>export presets</dd>
+            </div>
+          </dl>
         </div>
-
-        <section class="upload-panel" id="dropZone">
-          <label for="fileInput">Upload CSV or TSV</label>
-          <input id="fileInput" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values">
-          <button id="loadSample" type="button">Load CRM sample</button>
-          <p id="statusLine">Ready.</p>
-        </section>
-
-        <section class="control-panel">
-          <h2>Cleaning</h2>
-          <label><input type="checkbox" data-option="normalizeHeaders" checked> Normalize headers</label>
-          <label><input type="checkbox" data-option="trimCells" checked> Trim cells</label>
-          <label><input type="checkbox" data-option="normalizeEmpty" checked> Clear empty tokens</label>
-          <label><input type="checkbox" data-option="lowerEmail" checked> Lowercase emails</label>
-          <label><input type="checkbox" data-option="normalizePhones" checked> Format phones</label>
-          <label><input type="checkbox" data-option="normalizeDates" checked> ISO dates</label>
-          <label><input type="checkbox" data-option="normalizeNumbers" checked> Plain numbers</label>
-          <label><input type="checkbox" data-option="dropDuplicateRows" checked> Drop exact duplicates</label>
-        </section>
-
-        <section class="export-panel">
-          <h2>CRM target</h2>
-          <label class="select-label" for="presetSelect">Import format</label>
-          <select id="presetSelect">
-            <option value="hubspot">HubSpot contacts</option>
-            <option value="salesforce">Salesforce leads</option>
-            <option value="airtable">Airtable contacts</option>
-          </select>
-          <div class="button-row">
-            <button id="downloadCsv" type="button">Import CSV</button>
-            <button id="downloadReport" type="button">Report</button>
-          </div>
-          <button id="copyReport" class="secondary-action" type="button">Copy report</button>
-        </section>
-
-        <section class="sell-panel">
-          <h2>Offer</h2>
-          <p>$500 CRM import cleanup: duplicate contacts, broken fields, and repeatable upload scripts.</p>
-          <button id="outreachCopy" type="button">Copy outreach</button>
-        </section>
-      </aside>
-
-      <section class="main-panel">
-        <div id="emptyState" class="empty-state" hidden>
-          <h2>Drop a file to begin.</h2>
-        </div>
-
-        <div id="workspace">
-          <header class="workspace-header">
-            <div>
-              <p class="eyebrow">CRM import audit</p>
-              <h2>Contact readiness scan</h2>
-            </div>
-            <span class="badge" id="delimiterBadge">auto</span>
-          </header>
-
-          <section class="metrics-grid" aria-label="Dataset metrics">
-            <div>
-              <span>Rows</span>
-              <strong id="metricRows">0</strong>
-            </div>
-            <div>
-              <span>Columns</span>
-              <strong id="metricColumns">0</strong>
-            </div>
-            <div>
-              <span>Data quality</span>
-              <strong id="metricScore">0/100</strong>
-            </div>
-            <div>
-              <span>CRM ready</span>
-              <strong id="metricCrmScore">0/100</strong>
-            </div>
-          </section>
-
-          <section class="split-layout">
-            <div class="section-panel">
-              <div class="section-title">
-                <h2>Priority issues</h2>
-              </div>
-              <ul id="issueList" class="issue-list"></ul>
-            </div>
-
-            <div class="section-panel">
-              <div class="section-title">
-                <h2>Changes</h2>
-              </div>
-              <ul id="changeList" class="change-list"></ul>
-            </div>
-          </section>
-
-          <section class="section-panel">
-            <div class="section-title">
-              <h2>CRM import blockers</h2>
-            </div>
-            <div id="crmReadiness" class="crm-readiness"></div>
-          </section>
-
-          <section class="section-panel">
-            <div class="section-title">
-              <h2>Field mapping</h2>
-            </div>
-            <div class="table-wrap compact-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Target field</th>
-                    <th>Source field</th>
-                    <th>Required</th>
-                  </tr>
-                </thead>
-                <tbody id="fieldMapping"></tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="section-panel">
-            <div class="section-title">
-              <h2>Column profile</h2>
-            </div>
-            <div class="table-wrap compact-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Column</th>
-                    <th>Type</th>
-                    <th>Missing</th>
-                    <th>Unique</th>
-                    <th>Notes</th>
-                  </tr>
-                </thead>
-                <tbody id="columnProfile"></tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="section-panel">
-            <div class="section-title">
-              <h2>Duplicate scan</h2>
-            </div>
-            <div id="duplicatePanel" class="duplicate-grid"></div>
-          </section>
-
-          <section class="section-panel preview-panel">
-            <div class="section-title preview-title-row">
-              <h2 id="previewTitle">Import preview</h2>
-              <div class="segmented-control" aria-label="Preview mode">
-                <button id="cleanTab" class="is-active" type="button">Import</button>
-                <button id="rawTab" type="button">Raw</button>
-              </div>
-            </div>
-            <div class="table-wrap preview-wrap">
-              <table id="previewTable"></table>
-            </div>
-          </section>
+        <div class="hero-demo" aria-label="CRM import rescue preview">
+          <video controls muted playsinline poster="" preload="metadata">
+            <source src="demo/crm-import-rescue-demo.webm" type="video/webm">
+          </video>
         </div>
       </section>
-    </main>
 
-    <script src="src/dataRescue.js"></script>
-    <script src="src/app.js"></script>
+      <section id="offer" class="landing-section">
+        <div class="section-kicker">The offer</div>
+        <div class="offer-grid">
+          <article>
+            <h2>CRM-ready import file</h2>
+            <p>Cleaned CSV mapped to HubSpot contacts, Salesforce leads, Airtable contacts, or your custom CRM schema.</p>
+          </article>
+          <article>
+            <h2>Import blocker report</h2>
+            <p>Plain-English list of duplicate emails, invalid values, missing required fields, fuzzy duplicate accounts, and unmapped columns.</p>
+          </article>
+          <article>
+            <h2>Repeatable cleanup script</h2>
+            <p>The cleanup rules can become a reusable monthly workflow instead of another fragile spreadsheet ritual.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="demo" class="landing-section banded-section">
+        <div>
+          <p class="eyebrow">Live demo</p>
+          <h2>Run a sample CRM import audit in your browser.</h2>
+          <p>
+            The demo runs locally in the browser. No file is uploaded to a server.
+            Use the sample contact list or drop in a CSV to see the report.
+          </p>
+        </div>
+        <a class="primary-link" href="tool.html">Open the tool</a>
+      </section>
+
+      <section class="landing-section">
+        <div class="section-kicker">Good fit</div>
+        <div class="fit-grid">
+          <span>CRM migrations</span>
+          <span>Event lead lists</span>
+          <span>Agency client imports</span>
+          <span>Founder sales lists</span>
+          <span>Monthly enrichment files</span>
+          <span>Ops-owned Airtable bases</span>
+        </div>
+      </section>
+
+      <section class="landing-section final-cta">
+        <h2>Have a contact CSV you do not fully trust?</h2>
+        <p>Send a sample export. I will tell you what will break before you upload it.</p>
+        <a class="primary-link" href="https://github.com/saggu/data-rescue-kit/issues/new?title=CRM%20Import%20Rescue">Start the rescue</a>
+      </section>
+    </main>
   </body>
 </html>

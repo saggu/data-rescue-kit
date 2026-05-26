@@ -6,7 +6,7 @@ const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const OUT_DIR = join(ROOT, "demo");
 const OUT_FILE = join(OUT_DIR, "crm-import-rescue-demo.webm");
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-const APP_URL = "http://localhost:4173/index.html";
+const APP_URL = "http://localhost:4173/tool.html";
 const WIDTH = 1440;
 const HEIGHT = 900;
 
