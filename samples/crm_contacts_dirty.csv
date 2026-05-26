@@ -1,0 +1,12 @@
+Contact ID,Full Name,Work Email,Mobile Phone,Company Name,Job Title,Lead Source,CRM Status,Sales Owner,Last Contacted,City,State,Country,Notes
+001,Jordan Lee,JORDAN@ACME.COM,310.555.0199,"Acme, Inc.",VP Operations,Webinar,new,Amanda,1/5/26," Los Angeles ",CA,USA,"Asked for HubSpot import help"
+002,Jordan K Lee,jordan@acme.com,+1 310 555 0199,Acme Inc,VP Ops,webinar,New,Amanda,2026-01-05,Los Angeles,CA,United States,"Possible duplicate from trade show list"
+003,Priya Shah,priya@northstar.io,(424) 555-0110,North Star LLC,Founder,Referral,Qualified,Sam,05/10/2026,Marina del Rey,CA,USA,
+004,Priya S.,PRIYA@NORTHSTAR.IO,4245550110,northstar llc,CEO,referral,qualified,Sam,"May 10 2026",Marina del Rey,CA,USA,"same account?"
+005,Mateo Garcia,mgarcia@betabakery.com,555-0191,Beta Bakery,Owner,Walk-in,,Lee,3/2/26,Playa del Rey,CA,USA,
+005,Mateo Garcia,mgarcia@betabakery.com,555-0191,Beta Bakery,Owner,Walk-in,,Lee,3/2/26,Playa del Rey,CA,USA,
+006,Avery Chen,avery@westsideclinic.com,13105550112,Westside Clinic,Practice Manager,Partner,Open,Amanda,2026-02-20,Santa Monica,CA,USA,
+007,Avery Chen,avery@westsideclinic,310-555-0112,West Side Clinic,Manager,Partner,Open,Amanda,2/20/2026,Santa Monica,CA,USA,"bad email from old CSV"
+008,No Email,,3105550122,Ocean View Realty,Broker,Import,Cold,,null,Venice,CA,USA,
+009,Taylor Brooks,Info@OceanView.example,,Oceanview Realty,Agent,Import,cold,,,"Venice ",CA,USA,
+010,Riley Patel,team@harborfit.com,(310) 555-0124,Harbor Fitness,GM,Event,Nurture,Lee,2026-04-01,Marina del Rey,CA,USA,
