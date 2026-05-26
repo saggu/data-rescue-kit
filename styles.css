@@ -1036,6 +1036,14 @@ th {
   gap: 7px;
 }
 
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .field span {
   color: #3b4642;
   font-size: 13px;

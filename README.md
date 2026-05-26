@@ -34,7 +34,12 @@ The app includes a dirty CRM sample dataset at `samples/crm_contacts_dirty.csv`.
 The sample buyer-facing report is at `samples/crm-import-rescue-sample-report.md`.
 The sample cleaned import and issue exports are at `samples/crm-import-rescue-cleaned-hubspot.csv` and `samples/crm-import-rescue-issues.csv`.
 
-The intake email destination is configured in `src/leadForm.js`.
+The intake email destination, lead endpoint, and optional analytics endpoint are configured in `src/siteConfig.js`.
+The default lead endpoint uses FormSubmit AJAX, which requires the owner email to confirm the first submission.
+
+## Funnel Events
+
+`src/analytics.js` emits page, CTA, download, tool, and form events. Events are pushed to `window.dataLayer`, sent to `gtag`/`plausible` if present, and posted to `analyticsEndpoint` when configured. Without an analytics endpoint, the latest events are kept locally in `localStorage` for debugging.
 
 ## Demo Video
 

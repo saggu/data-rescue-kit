@@ -10,6 +10,8 @@
     <title>CRM Import Rescue</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="styles.css" />
+    <script src="src/siteConfig.js" defer></script>
+    <script src="src/analytics.js" defer></script>
   </head>
   <body class="landing-page">
     <header class="landing-nav">
@@ -23,8 +25,8 @@
       <nav aria-label="Primary navigation">
         <a href="#offer">Offer</a>
         <a href="#demo">Demo</a>
-        <a href="sample-output.html">Sample Output</a>
-        <a href="tool.html">Try Tool</a>
+        <a href="sample-output.html" data-analytics="nav_sample_output">Sample Output</a>
+        <a href="tool.html" data-analytics="nav_try_tool">Try Tool</a>
       </nav>
     </header>
 
@@ -38,9 +40,18 @@
             and unmapped columns before your team uploads the file.
           </p>
           <div class="hero-actions">
-            <a class="primary-link" href="start.html">Book a rescue</a>
-            <a class="secondary-link" href="tool.html">Try the audit tool</a>
-            <a class="secondary-link" href="sample-output.html">View sample output</a>
+            <a class="primary-link" href="start.html" data-analytics="hero_start_click"
+              >Book a rescue</a
+            >
+            <a class="secondary-link" href="tool.html" data-analytics="hero_tool_click"
+              >Try the audit tool</a
+            >
+            <a
+              class="secondary-link"
+              href="sample-output.html"
+              data-analytics="hero_sample_output_click"
+              >View sample output</a
+            >
           </div>
           <dl class="proof-strip" aria-label="Service highlights">
             <div>
@@ -100,7 +111,7 @@
             contact list or drop in a CSV to see the report.
           </p>
         </div>
-        <a class="primary-link" href="tool.html">Open the tool</a>
+        <a class="primary-link" href="tool.html" data-analytics="demo_tool_click">Open the tool</a>
       </section>
 
       <section class="landing-section">
@@ -118,7 +129,9 @@
       <section class="landing-section final-cta">
         <h2>Have a contact CSV you do not fully trust?</h2>
         <p>Send a sample export. I will tell you what will break before you upload it.</p>
-        <a class="primary-link" href="start.html">Start the rescue</a>
+        <a class="primary-link" href="start.html" data-analytics="final_start_click"
+          >Start the rescue</a
+        >
       </section>
     </main>
   </body>

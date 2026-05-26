@@ -10,6 +10,8 @@
     <title>CRM Import Rescue Sample Output</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="styles.css" />
+    <script src="src/siteConfig.js" defer></script>
+    <script src="src/analytics.js" defer></script>
   </head>
   <body class="landing-page sample-page">
     <header class="landing-nav">
@@ -22,8 +24,8 @@
       </a>
       <nav aria-label="Primary navigation">
         <a href="index.html#offer">Offer</a>
-        <a href="tool.html">Try Tool</a>
-        <a href="start.html">Start</a>
+        <a href="tool.html" data-analytics="nav_try_tool">Try Tool</a>
+        <a href="start.html" data-analytics="nav_start_click">Start</a>
       </nav>
     </header>
 
@@ -37,8 +39,12 @@
             file, a row-level issue CSV, and a client-ready audit report.
           </p>
           <div class="hero-actions">
-            <a class="primary-link" href="start.html">Request a rescue</a>
-            <a class="secondary-link" href="tool.html">Run the live tool</a>
+            <a class="primary-link" href="start.html" data-analytics="sample_start_click"
+              >Request a rescue</a
+            >
+            <a class="secondary-link" href="tool.html" data-analytics="sample_tool_click"
+              >Run the live tool</a
+            >
           </div>
         </div>
         <dl class="sample-scorecard" aria-label="Sample file metrics">
@@ -71,7 +77,11 @@
               Duplicate contacts, invalid email values, mixed casing, empty required fields, and
               date/phone inconsistency.
             </p>
-            <a class="secondary-link" href="samples/crm_contacts_dirty.csv" download
+            <a
+              class="secondary-link"
+              href="samples/crm_contacts_dirty.csv"
+              download
+              data-analytics="download_sample_input"
               >Download input</a
             >
           </article>
@@ -82,7 +92,11 @@
               Mapped fields, normalized dates, normalized phones, lowercased emails, trimmed values,
               and duplicate row removal.
             </p>
-            <a class="secondary-link" href="samples/crm-import-rescue-cleaned-hubspot.csv" download
+            <a
+              class="secondary-link"
+              href="samples/crm-import-rescue-cleaned-hubspot.csv"
+              download
+              data-analytics="download_cleaned_sample"
               >Download cleaned CSV</a
             >
           </article>
@@ -93,7 +107,11 @@
               Severity, row number, field, bad value, issue category, and suggested fix for the CRM
               owner.
             </p>
-            <a class="secondary-link" href="samples/crm-import-rescue-issues.csv" download
+            <a
+              class="secondary-link"
+              href="samples/crm-import-rescue-issues.csv"
+              download
+              data-analytics="download_issue_sample"
               >Download issue CSV</a
             >
           </article>
@@ -104,7 +122,11 @@
               Executive summary, field mapping, blocker list, cleaning actions, column profile, and
               next step.
             </p>
-            <a class="secondary-link" href="samples/crm-import-rescue-sample-report.md" download
+            <a
+              class="secondary-link"
+              href="samples/crm-import-rescue-sample-report.md"
+              download
+              data-analytics="download_report_sample"
               >Download report</a
             >
           </article>
@@ -195,7 +217,9 @@
             Files stay local in the browser unless you choose to share a sample for paid cleanup.
           </p>
         </div>
-        <a class="primary-link" href="start.html">Start the rescue</a>
+        <a class="primary-link" href="start.html" data-analytics="sample_final_start_click"
+          >Start the rescue</a
+        >
       </section>
     </main>
   </body>

@@ -10,6 +10,8 @@
     <title>Start CRM Import Rescue</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="styles.css" />
+    <script src="src/siteConfig.js" defer></script>
+    <script src="src/analytics.js" defer></script>
     <script src="src/leadForm.js" defer></script>
   </head>
   <body class="landing-page intake-page">
@@ -23,8 +25,8 @@
       </a>
       <nav aria-label="Primary navigation">
         <a href="index.html#offer">Offer</a>
-        <a href="tool.html">Try Tool</a>
-        <a href="sample-output.html">Sample Output</a>
+        <a href="tool.html" data-analytics="nav_try_tool">Try Tool</a>
+        <a href="sample-output.html" data-analytics="nav_sample_output">Sample Output</a>
       </nav>
     </header>
 
@@ -66,7 +68,19 @@
           <h2 id="lead-title">Request a CRM Import Rescue</h2>
         </div>
 
-        <form class="lead-form" id="lead-form">
+        <form
+          class="lead-form"
+          id="lead-form"
+          method="POST"
+          action="https://formsubmit.co/amandeep.s.saggu@gmail.com"
+        >
+          <input type="hidden" name="_subject" value="CRM Import Rescue request" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_captcha" value="false" />
+          <label class="honeypot" aria-hidden="true">
+            Leave this field blank
+            <input name="_honey" tabindex="-1" autocomplete="off" />
+          </label>
           <div class="form-grid">
             <label class="field">
               <span>Name</span>
@@ -129,9 +143,9 @@
           </label>
 
           <div class="lead-actions">
-            <button type="submit">Open email draft</button>
+            <button type="submit">Send request</button>
             <button class="secondary-action light" type="button" id="copy-lead">
-              Copy inquiry
+              Copy fallback
             </button>
           </div>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
