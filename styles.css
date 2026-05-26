@@ -768,7 +768,8 @@ th {
 .banded-section p,
 .final-cta p,
 .two-column-section p,
-.comparison-section p {
+.comparison-section p,
+.faq-section p {
   color: var(--muted);
   line-height: 1.55;
 }
@@ -795,7 +796,8 @@ th {
 }
 
 .two-column-section h2,
-.comparison-section h2 {
+.comparison-section h2,
+.faq-section h2 {
   max-width: 760px;
   margin: 0;
   font-size: 34px;
@@ -841,6 +843,51 @@ th {
 .trust-grid p,
 .comparison-grid p {
   margin-bottom: 0;
+}
+
+.faq-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.faq-list details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.faq-list summary {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  padding: 18px 20px;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::after {
+  flex: 0 0 auto;
+  color: var(--teal);
+  content: "+";
+}
+
+.faq-list details[open] summary::after {
+  content: "-";
+}
+
+.faq-list p {
+  margin: 0;
+  padding: 0 20px 18px;
 }
 
 .fit-grid {

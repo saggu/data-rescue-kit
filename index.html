@@ -25,7 +25,7 @@
       <nav aria-label="Primary navigation">
         <a href="#offer">Offer</a>
         <a href="#security">Security</a>
-        <a href="#excel">Why not Excel?</a>
+        <a href="#faq">FAQ</a>
         <a href="#demo">Demo</a>
         <a href="sample-output.html" data-analytics="nav_sample_output">Sample Output</a>
         <a href="tool.html" data-analytics="nav_try_tool">Try Tool</a>
@@ -176,6 +176,82 @@
               logic can become a reusable script instead of another manual spreadsheet session.
             </p>
           </article>
+        </div>
+      </section>
+
+      <section id="faq" class="landing-section faq-section">
+        <div class="section-kicker">FAQ</div>
+        <h2>Security, AI, and workflow questions.</h2>
+        <div class="faq-list">
+          <details open>
+            <summary>Is my CSV uploaded when I use the public audit tool?</summary>
+            <p>
+              No. The public tool runs as static JavaScript in your browser and parses the selected
+              CSV locally. CRM Import Rescue does not receive that file unless you choose to send a
+              sample or paid cleanup file separately.
+            </p>
+          </details>
+          <details>
+            <summary>Do you use AI to clean customer data?</summary>
+            <p>
+              The browser tool uses deterministic checks and cleanup rules, not an AI model. Paid
+              cleanup is handled with explicit rules, scripts, and review. Raw customer CSVs are not
+              pasted into AI tools unless you explicitly approve a narrow, anonymized use.
+            </p>
+          </details>
+          <details>
+            <summary>Will my data be used to train AI models?</summary>
+            <p>
+              No. CRM Import Rescue does not use customer CSVs to train models, create examples, or
+              build marketing samples. Public examples use synthetic sample data.
+            </p>
+          </details>
+          <details>
+            <summary>Do you need access to my CRM?</summary>
+            <p>
+              No. The normal workflow uses exported CSV files only. You keep control of HubSpot,
+              Salesforce, Airtable, and any other CRM account.
+            </p>
+          </details>
+          <details>
+            <summary>What should I send first?</summary>
+            <p>
+              Start with 20-100 anonymized rows that preserve the same column names and field
+              patterns as the real file. Remove or replace sensitive names, emails, phone numbers,
+              notes, and IDs until scope and handling are agreed.
+            </p>
+          </details>
+          <details>
+            <summary>What if the file contains sensitive or regulated data?</summary>
+            <p>
+              Do not send sensitive, regulated, or contract-restricted data through the intake form.
+              Start with anonymized structure only. If the real file requires special handling, that
+              needs to be agreed before any full-file transfer.
+            </p>
+          </details>
+          <details>
+            <summary>What happens to working files after delivery?</summary>
+            <p>
+              File handling and deletion expectations should be agreed before a full cleanup. The
+              default goal is narrow: use the file to produce the cleaned CSV, issue export, and
+              blocker report, not to build a retained data asset.
+            </p>
+          </details>
+          <details>
+            <summary>What does this do that Excel does not?</summary>
+            <p>
+              Excel is useful for quick edits. CRM Import Rescue is designed to produce a repeatable
+              cleanup path: cleaned import CSV, row-level issue CSV, blocker report, and rules that
+              can be reused for the next event list, export, or migration.
+            </p>
+          </details>
+          <details>
+            <summary>Can an agency use this for client work?</summary>
+            <p>
+              Yes. The service is a good fit for CRM consultants, RevOps teams, and agencies that
+              need a small subcontracted cleanup sprint before a client import or migration.
+            </p>
+          </details>
         </div>
       </section>
 
