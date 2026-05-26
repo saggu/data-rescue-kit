@@ -79,8 +79,15 @@ Deliverables:
 - Duplicate person/company/email report.
 - Import blocker report.
 - Field mapping for HubSpot, Salesforce, Airtable, or the client's CRM.
-- Repeatable cleanup script for future monthly imports.
+- Reusable cleanup workflow for one recurring CSV format and CRM target.
 - Optional validation checklist for whoever owns the CRM.
+
+Reusable workflow scope:
+
+- `$500+` is a one-time setup for one recurring CSV format, one CRM target, and one agreed rule set.
+- Includes reusable script/workflow, cleaned-output template, issue-report template, handoff walkthrough, and 14 days of small fixes.
+- Lasts as long as the source file structure and cleanup rules stay the same.
+- New columns, new CRM mappings, or new cleanup rules are scoped as a paid change request or managed monthly cleanup.
 
 Good fit:
 
