@@ -35,7 +35,8 @@ a {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -802,6 +803,169 @@ th {
   max-width: 580px;
 }
 
+.intake-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1fr);
+  gap: 34px;
+  align-items: start;
+  width: min(1120px, calc(100vw - 48px));
+  margin: 0 auto;
+  padding: 48px 0 72px;
+}
+
+.intake-copy h1,
+.lead-card h2 {
+  margin: 0;
+  line-height: 1.08;
+}
+
+.intake-copy h1 {
+  max-width: 680px;
+  font-size: 48px;
+}
+
+.intake-copy > p {
+  max-width: 620px;
+  color: #4f5d58;
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.price-stack,
+.lead-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.price-stack {
+  display: grid;
+  max-width: 650px;
+  margin-top: 26px;
+}
+
+.price-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding: 16px;
+}
+
+.price-row:last-child {
+  border-bottom: 0;
+}
+
+.price-row strong {
+  color: var(--teal);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.price-row span,
+.privacy-note {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.privacy-note {
+  margin-top: 22px;
+  font-size: 14px;
+}
+
+.lead-card {
+  padding: 22px;
+}
+
+.lead-card-header {
+  margin-bottom: 18px;
+}
+
+.lead-card h2 {
+  font-size: 30px;
+}
+
+.lead-form {
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+}
+
+.field span {
+  color: #3b4642;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+  color: var(--ink);
+  padding: 11px 12px;
+}
+
+.field textarea {
+  min-height: 138px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--teal);
+  outline: 3px solid rgba(15, 118, 110, 0.16);
+}
+
+.lead-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.secondary-action.light {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+}
+
+.secondary-action.light:hover {
+  background: #eef3f1;
+}
+
+.form-status {
+  min-height: 22px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.form-status[data-tone="success"] {
+  color: var(--green);
+}
+
+.form-status[data-tone="error"] {
+  color: var(--red);
+}
+
 @media (max-width: 1060px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -819,6 +983,10 @@ th {
   .landing-hero {
     grid-template-columns: 1fr;
     min-height: auto;
+  }
+
+  .intake-layout {
+    grid-template-columns: 1fr;
   }
 
   .hero-copy h1 {
@@ -872,7 +1040,8 @@ th {
   }
 
   .landing-hero,
-  .landing-section {
+  .landing-section,
+  .intake-layout {
     width: min(100vw - 32px, 1180px);
   }
 
@@ -880,11 +1049,21 @@ th {
     font-size: 36px;
   }
 
+  .intake-copy h1 {
+    font-size: 34px;
+  }
+
   .hero-lede {
     font-size: 18px;
   }
 
+  .form-grid,
   .proof-strip {
     grid-template-columns: 1fr;
+  }
+
+  .price-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
