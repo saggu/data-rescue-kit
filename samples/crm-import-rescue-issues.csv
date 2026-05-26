@@ -1,0 +1,27 @@
+severity,stage,row,field,value,issue,suggested_fix
+high,source,7,row,matches row 6,Exact duplicate row,Keep one record and remove the duplicate before import.
+low,source_column,,Work Email,,Inconsistent casing in repeated values,Standardize casing for repeated values before import.
+low,source_column,,Lead Source,,Inconsistent casing in repeated values,Standardize casing for repeated values before import.
+medium,source,6,CRM Status,,Missing value,Fill the value or confirm this field can be blank for import.
+medium,source,7,CRM Status,,Missing value,Fill the value or confirm this field can be blank for import.
+low,source_column,,CRM Status,,Inconsistent casing in repeated values,Standardize casing for repeated values before import.
+medium,source,10,Sales Owner,,Missing value,Fill the value or confirm this field can be blank for import.
+medium,source,11,Sales Owner,,Missing value,Fill the value or confirm this field can be blank for import.
+medium,source,10,Last Contacted,null,Missing value,Fill the value or confirm this field can be blank for import.
+medium,source,11,Last Contacted,,Missing value,Fill the value or confirm this field can be blank for import.
+low,source,2,City, Los Angeles ,Leading or trailing whitespace,Trim whitespace before import.
+low,source,11,City,Venice ,Leading or trailing whitespace,Trim whitespace before import.
+high,source,4,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,source,6,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,source,7,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,source,8,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,source,10,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,source,11,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,source,12,Notes,,Missing value,Fill the value or confirm this field can be blank for import.
+high,crm_export,9,email,,Required CRM field is missing,Fill email before importing into HubSpot contacts.
+high,crm_export,8,Email,avery@westsideclinic,Invalid email,Repair the email address or exclude the row from import.
+medium,crm_export,2,Email,jordan@acme.com,Duplicate email group across rows 2; 3,Choose the winning contact record before importing.
+medium,crm_export,3,Email,jordan@acme.com,Duplicate email group across rows 2; 3,Choose the winning contact record before importing.
+medium,crm_export,4,Email,priya@northstar.io,Duplicate email group across rows 4; 5,Choose the winning contact record before importing.
+medium,crm_export,5,Email,priya@northstar.io,Duplicate email group across rows 4; 5,Choose the winning contact record before importing.
+low,crm_mapping,,lifecyclestage,,Target CRM field could not be mapped,Confirm whether this field is required or add a source column mapping.

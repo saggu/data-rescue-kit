@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Sample CRM Import Rescue deliverables: cleaned HubSpot import CSV, issue CSV, and audit report."
+    />
+    <title>CRM Import Rescue Sample Output</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="landing-page sample-page">
+    <header class="landing-nav">
+      <a class="nav-brand" href="index.html">
+        <span class="data-mark compact" aria-hidden="true">
+          <span></span><span></span><span></span> <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </span>
+        <span>CRM Import Rescue</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="index.html#offer">Offer</a>
+        <a href="tool.html">Try Tool</a>
+        <a href="start.html">Start</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="sample-hero">
+        <div>
+          <p class="eyebrow">Sample deliverables</p>
+          <h1>See the exact files a CRM Import Rescue produces.</h1>
+          <p>
+            This sample starts with a messy contact export and ends with a HubSpot-ready import
+            file, a row-level issue CSV, and a client-ready audit report.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="start.html">Request a rescue</a>
+            <a class="secondary-link" href="tool.html">Run the live tool</a>
+          </div>
+        </div>
+        <dl class="sample-scorecard" aria-label="Sample file metrics">
+          <div>
+            <dt>11</dt>
+            <dd>source rows</dd>
+          </div>
+          <div>
+            <dt>10</dt>
+            <dd>cleaned rows</dd>
+          </div>
+          <div>
+            <dt>26</dt>
+            <dd>row-level issues</dd>
+          </div>
+          <div>
+            <dt>69/100</dt>
+            <dd>CRM readiness</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="landing-section">
+        <div class="section-kicker">Downloads</div>
+        <div class="download-grid">
+          <article>
+            <span class="file-type">Input CSV</span>
+            <h2>Messy source file</h2>
+            <p>
+              Duplicate contacts, invalid email values, mixed casing, empty required fields, and
+              date/phone inconsistency.
+            </p>
+            <a class="secondary-link" href="samples/crm_contacts_dirty.csv" download
+              >Download input</a
+            >
+          </article>
+          <article>
+            <span class="file-type">Output CSV</span>
+            <h2>Cleaned HubSpot import</h2>
+            <p>
+              Mapped fields, normalized dates, normalized phones, lowercased emails, trimmed values,
+              and duplicate row removal.
+            </p>
+            <a class="secondary-link" href="samples/crm-import-rescue-cleaned-hubspot.csv" download
+              >Download cleaned CSV</a
+            >
+          </article>
+          <article>
+            <span class="file-type">Issue CSV</span>
+            <h2>Row-level fix list</h2>
+            <p>
+              Severity, row number, field, bad value, issue category, and suggested fix for the CRM
+              owner.
+            </p>
+            <a class="secondary-link" href="samples/crm-import-rescue-issues.csv" download
+              >Download issue CSV</a
+            >
+          </article>
+          <article>
+            <span class="file-type">Report MD</span>
+            <h2>Audit report</h2>
+            <p>
+              Executive summary, field mapping, blocker list, cleaning actions, column profile, and
+              next step.
+            </p>
+            <a class="secondary-link" href="samples/crm-import-rescue-sample-report.md" download
+              >Download report</a
+            >
+          </article>
+        </div>
+      </section>
+
+      <section class="landing-section output-preview">
+        <div class="section-kicker">Before and after</div>
+        <div class="preview-columns">
+          <article>
+            <h2>Problem rows</h2>
+            <div class="sample-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Row</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Issue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2-3</td>
+                    <td>jordan@acme.com</td>
+                    <td>310.555.0199 / +1 310 555 0199</td>
+                    <td>Duplicate email group</td>
+                  </tr>
+                  <tr>
+                    <td>8</td>
+                    <td>avery@westsideclinic</td>
+                    <td>310-555-0112</td>
+                    <td>Invalid email</td>
+                  </tr>
+                  <tr>
+                    <td>9</td>
+                    <td></td>
+                    <td>3105550122</td>
+                    <td>Required email missing</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+          <article>
+            <h2>Clean import shape</h2>
+            <div class="sample-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>email</th>
+                    <th>firstname</th>
+                    <th>phone</th>
+                    <th>company</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>jordan@acme.com</td>
+                    <td>Jordan</td>
+                    <td>(310) 555-0199</td>
+                    <td>Acme, Inc.</td>
+                  </tr>
+                  <tr>
+                    <td>priya@northstar.io</td>
+                    <td>Priya</td>
+                    <td>(424) 555-0110</td>
+                    <td>North Star LLC</td>
+                  </tr>
+                  <tr>
+                    <td>team@harborfit.com</td>
+                    <td>Riley</td>
+                    <td>(310) 555-0124</td>
+                    <td>Harbor Fitness</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="landing-section banded-section">
+        <div>
+          <p class="eyebrow">Ready to test your file?</p>
+          <h2>Run the browser audit or send the import details.</h2>
+          <p>
+            Files stay local in the browser unless you choose to share a sample for paid cleanup.
+          </p>
+        </div>
+        <a class="primary-link" href="start.html">Start the rescue</a>
+      </section>
+    </main>
+  </body>
+</html>

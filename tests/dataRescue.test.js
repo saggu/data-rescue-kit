@@ -36,6 +36,7 @@ const exported = rescue.applyCrmPreset(cleaned, "hubspot");
 assert.deepEqual(exported.headers.slice(0, 4), ["email", "firstname", "lastname", "phone"]);
 assert.equal(exported.rows[0][1], "Jordan");
 assert.equal(exported.rows[0][2], "Lee");
+assert.equal(exported.rows[0][3], "(310) 555-0199");
 
 const crm = rescue.analyzeCrmReadiness(exported, "hubspot");
 assert.equal(crm.presetLabel, "HubSpot contacts");

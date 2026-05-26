@@ -27,7 +27,7 @@
         {
           key: "phone",
           label: "phone",
-          aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"],
+          aliases: ["phone", "phone_number", "mobile", "mobile_phone", "cell", "cell_phone"],
         },
         {
           key: "company",
@@ -80,7 +80,7 @@
         {
           key: "Phone",
           label: "Phone",
-          aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"],
+          aliases: ["phone", "phone_number", "mobile", "mobile_phone", "cell", "cell_phone"],
         },
         {
           key: "Company",
@@ -110,7 +110,7 @@
         {
           key: "Phone",
           label: "Phone",
-          aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"],
+          aliases: ["phone", "phone_number", "mobile", "mobile_phone", "cell", "cell_phone"],
         },
         {
           key: "Company",

@@ -26,11 +26,13 @@ This is no longer positioned as a generic data cleaning tool. The wedge is speci
 
 - `index.html` is the sales landing page.
 - `start.html` is the lead intake page. It builds an email draft from the submitted form.
+- `sample-output.html` shows the buyer-facing sample deliverables.
 - `tool.html` is the working CRM import audit tool.
 - `.github/workflows/pages.yml` deploys the static site to GitHub Pages on every push to `main`.
 
 The app includes a dirty CRM sample dataset at `samples/crm_contacts_dirty.csv`.
 The sample buyer-facing report is at `samples/crm-import-rescue-sample-report.md`.
+The sample cleaned import and issue exports are at `samples/crm-import-rescue-cleaned-hubspot.csv` and `samples/crm-import-rescue-issues.csv`.
 
 The intake email destination is configured in `src/leadForm.js`.
 
