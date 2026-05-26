@@ -18,6 +18,7 @@ This is no longer positioned as a generic data cleaning tool. The wedge is speci
 - Scores CRM import readiness.
 - Flags import blockers such as missing required fields, invalid emails, duplicate email groups, invalid phones, and unmapped target fields.
 - Exports an import-ready CSV for the selected CRM.
+- Exports a row-level issue CSV with severity, stage, row, field, value, and suggested fix.
 - Generates a Markdown report that can be sent to a prospect or client.
 - Runs fully in the browser. No upload server and no API key.
 

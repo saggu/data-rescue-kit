@@ -328,23 +328,31 @@
   function countTypes(values) {
     const counts = { number: 0, date: 0, email: 0, phone: 0, url: 0, boolean: 0, text: 0 };
     for (const value of values) {
-      if (isEmail(value)) {
-        counts.email += 1;
-      } else if (isUrl(value)) {
-        counts.url += 1;
-      } else if (isBooleanLike(value)) {
-        counts.boolean += 1;
-      } else if (parseDate(value)) {
-        counts.date += 1;
-      } else if (isPhoneLike(value)) {
-        counts.phone += 1;
-      } else if (isNumericLike(value)) {
-        counts.number += 1;
-      } else {
-        counts.text += 1;
-      }
+      counts[classifyValue(value)] += 1;
     }
     return counts;
+  }
+
+  function classifyValue(value) {
+    if (isEmail(value)) {
+      return "email";
+    }
+    if (isUrl(value)) {
+      return "url";
+    }
+    if (isBooleanLike(value)) {
+      return "boolean";
+    }
+    if (parseDate(value)) {
+      return "date";
+    }
+    if (isPhoneLike(value)) {
+      return "phone";
+    }
+    if (isNumericLike(value)) {
+      return "number";
+    }
+    return "text";
   }
 
   function inferType(counts, total) {
@@ -354,6 +362,11 @@
     const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     const [type, count] = entries[0];
     return count / total >= 0.72 ? type : "mixed";
+  }
+
+  function dominantColumnType(column) {
+    const entries = Object.entries(column.typeCounts || {}).sort((a, b) => b[1] - a[1]);
+    return entries[0] ? entries[0][0] : "text";
   }
 
   function cleanTable(table, analysis, options) {
@@ -701,6 +714,203 @@
       "Run one small pilot import, review rejected records, then turn the cleanup rules into a repeatable monthly CRM import workflow.",
     );
     return lines.join("\n");
+  }
+
+  function buildIssueExport(table, analysis, options) {
+    const opts = options || {};
+    const crm = opts.crm || null;
+    const exported = opts.exported || null;
+    const headers = ["severity", "stage", "row", "field", "value", "issue", "suggested_fix"];
+    const rows = [];
+    const addIssue = (issue) => {
+      rows.push([
+        issue.severity || "low",
+        issue.stage || "source",
+        issue.row || "",
+        issue.field || "",
+        issue.value || "",
+        issue.issue || "",
+        issue.suggestedFix || "",
+      ]);
+    };
+
+    for (const header of analysis.duplicateHeaders) {
+      addIssue({
+        severity: "high",
+        stage: "source_header",
+        field: header,
+        issue: "Duplicate normalized header",
+        suggestedFix: "Rename one of the duplicate columns before import.",
+      });
+    }
+
+    for (const group of analysis.duplicates.duplicateGroups) {
+      const keeper = group[0];
+      for (const row of group.slice(1)) {
+        addIssue({
+          severity: "high",
+          stage: "source",
+          row,
+          field: "row",
+          value: `matches row ${keeper}`,
+          issue: "Exact duplicate row",
+          suggestedFix: "Keep one record and remove the duplicate before import.",
+        });
+      }
+    }
+
+    for (const group of analysis.fuzzyMatches.groups) {
+      addIssue({
+        severity: "medium",
+        stage: "source",
+        row: group.rows.join("; "),
+        field: group.column,
+        value: group.values.join(" / "),
+        issue: `Possible fuzzy duplicate (${Math.round(group.score * 100)}% similar)`,
+        suggestedFix:
+          "Compare these records and merge them if they represent the same contact or company.",
+      });
+    }
+
+    addColumnIssues(table, analysis, addIssue);
+    if (crm && exported) {
+      addCrmIssues(crm, exported, addIssue);
+    }
+
+    return { headers, rows };
+  }
+
+  function addColumnIssues(table, analysis, addIssue) {
+    for (const column of analysis.columns) {
+      const missingSeverity = column.missingRate >= 0.4 ? "high" : "medium";
+      if (column.missingRate >= 0.15) {
+        table.rows.forEach((row, rowIndex) => {
+          const value = row[column.index] == null ? "" : String(row[column.index]);
+          if (isEmptyish(value)) {
+            addIssue({
+              severity: missingSeverity,
+              stage: "source",
+              row: rowIndex + 2,
+              field: column.header,
+              value,
+              issue: "Missing value",
+              suggestedFix: "Fill the value or confirm this field can be blank for import.",
+            });
+          }
+        });
+      }
+
+      if (column.whitespaceCount) {
+        table.rows.forEach((row, rowIndex) => {
+          const value = row[column.index] == null ? "" : String(row[column.index]);
+          if (value !== value.trim()) {
+            addIssue({
+              severity: "low",
+              stage: "source",
+              row: rowIndex + 2,
+              field: column.header,
+              value,
+              issue: "Leading or trailing whitespace",
+              suggestedFix: "Trim whitespace before import.",
+            });
+          }
+        });
+      }
+
+      if (column.inferredType === "mixed") {
+        const dominantType = dominantColumnType(column);
+        table.rows.forEach((row, rowIndex) => {
+          const value = row[column.index] == null ? "" : String(row[column.index]).trim();
+          const type = classifyValue(value);
+          if (value && type !== dominantType) {
+            addIssue({
+              severity: "medium",
+              stage: "source",
+              row: rowIndex + 2,
+              field: column.header,
+              value,
+              issue: `Mixed format value (${type} in mostly ${dominantType} column)`,
+              suggestedFix: "Normalize this value to match the dominant column format.",
+            });
+          }
+        });
+      }
+
+      if (column.casingIssues >= 2) {
+        addIssue({
+          severity: "low",
+          stage: "source_column",
+          field: column.header,
+          issue: "Inconsistent casing in repeated values",
+          suggestedFix: "Standardize casing for repeated values before import.",
+        });
+      }
+    }
+  }
+
+  function addCrmIssues(crm, exported, addIssue) {
+    for (const item of crm.requiredMissing) {
+      for (const row of item.rows) {
+        addIssue({
+          severity: "high",
+          stage: "crm_export",
+          row,
+          field: item.field,
+          issue: "Required CRM field is missing",
+          suggestedFix: `Fill ${item.field} before importing into ${crm.presetLabel}.`,
+        });
+      }
+    }
+
+    for (const item of crm.invalidEmails) {
+      addIssue({
+        severity: "high",
+        stage: "crm_export",
+        row: item.row,
+        field: "Email",
+        value: item.value,
+        issue: "Invalid email",
+        suggestedFix: "Repair the email address or exclude the row from import.",
+      });
+    }
+
+    for (const item of crm.invalidPhones) {
+      addIssue({
+        severity: "medium",
+        stage: "crm_export",
+        row: item.row,
+        field: "Phone",
+        value: item.value,
+        issue: "Invalid phone",
+        suggestedFix: "Normalize the phone number or leave it blank if phone is optional.",
+      });
+    }
+
+    for (const group of crm.duplicateEmailGroups) {
+      const rows = group.map((item) => item.row).join("; ");
+      const email = group[0] ? group[0].value : "";
+      for (const item of group) {
+        addIssue({
+          severity: "medium",
+          stage: "crm_export",
+          row: item.row,
+          field: "Email",
+          value: email,
+          issue: `Duplicate email group across rows ${rows}`,
+          suggestedFix: "Choose the winning contact record before importing.",
+        });
+      }
+    }
+
+    for (const field of exported.missingFields || []) {
+      addIssue({
+        severity: "low",
+        stage: "crm_mapping",
+        field,
+        issue: "Target CRM field could not be mapped",
+        suggestedFix: "Confirm whether this field is required or add a source column mapping.",
+      });
+    }
   }
 
   function buildIssues(context) {
@@ -1157,6 +1367,7 @@
     applyCrmPreset,
     analyzeCrmReadiness,
     buildMarkdownReport,
+    buildIssueExport,
     normalizeHeader,
     formatDateIso,
   };

@@ -58,4 +58,20 @@ assert.match(report, /CRM Import Rescue Report/);
 assert.match(report, /Exact duplicate rows: 1/);
 assert.match(report, /CRM Field Mapping/);
 
+const issueExport = rescue.buildIssueExport(table, analysis, { exported, crm });
+assert.deepEqual(issueExport.headers, [
+  "severity",
+  "stage",
+  "row",
+  "field",
+  "value",
+  "issue",
+  "suggested_fix",
+]);
+assert.ok(issueExport.rows.some((row) => row.includes("Exact duplicate row")));
+assert.ok(issueExport.rows.some((row) => row.includes("Duplicate email group across rows 2; 3")));
+const issueCsv = rescue.toDelimited(issueExport.headers, issueExport.rows, ",");
+assert.match(issueCsv, /suggested_fix/);
+assert.match(issueCsv, /crm_export/);
+
 console.log("dataRescue tests passed");

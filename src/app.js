@@ -37,6 +37,7 @@
       "loadSample",
       "downloadCsv",
       "downloadReport",
+      "downloadIssues",
       "copyReport",
       "statusLine",
       "metricRows",
@@ -72,6 +73,7 @@
     );
     els.downloadCsv.addEventListener("click", downloadCleanCsv);
     els.downloadReport.addEventListener("click", downloadReport);
+    els.downloadIssues.addEventListener("click", downloadIssueCsv);
     els.copyReport.addEventListener("click", copyReport);
     els.rawTab.addEventListener("click", () => setPreview("raw"));
     els.cleanTab.addEventListener("click", () => setPreview("clean"));
@@ -330,6 +332,7 @@
     const hasOutput = Boolean(state.cleaned);
     els.downloadCsv.disabled = !hasOutput;
     els.downloadReport.disabled = !hasOutput;
+    els.downloadIssues.disabled = !hasOutput;
     els.copyReport.disabled = !hasOutput;
   }
 
@@ -352,6 +355,19 @@
     });
     const base = state.fileName.replace(/\.[^.]+$/, "") || "data";
     downloadBlob(report, `${base}-crm-import-report.md`, "text/markdown;charset=utf-8");
+  }
+
+  function downloadIssueCsv() {
+    if (!state.cleaned) {
+      return;
+    }
+    const issueExport = rescue.buildIssueExport(state.table, state.analysis, {
+      exported: state.exported,
+      crm: state.crm,
+    });
+    const csv = rescue.toDelimited(issueExport.headers, issueExport.rows, ",");
+    const base = state.fileName.replace(/\.[^.]+$/, "") || "data";
+    downloadBlob(csv, `${base}-crm-import-issues.csv`, "text/csv;charset=utf-8");
   }
 
   async function copyReport() {
