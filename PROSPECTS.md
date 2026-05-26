@@ -1,6 +1,6 @@
 # Prospect List
 
-Goal: sell a fixed-scope CRM Import Rescue project starting at `$500`.
+Goal: sell a fixed-scope CRM Import Rescue project starting at `$199`, with a `$49` sample audit.
 
 Use this list to find partners and buyers who already feel CRM import pain. Do not bulk spam. Send short, specific notes and only follow up once.
 
@@ -102,7 +102,7 @@ Quick question: do you have a HubSpot, Salesforce, or Airtable import coming up 
 
 I built a small CRM Import Rescue tool that finds duplicate people/companies, bad emails, inconsistent phone numbers, unmapped fields, and missing required columns before upload.
 
-Fixed-scope cleanup starts at $500. If you send a sample export, I can tell you what will break before you upload it.
+Fixed-scope cleanup starts at $199, with a $49 sample audit. If you send a sample export, I can tell you what will break before you upload it.
 ```
 
 ## Follow-Up

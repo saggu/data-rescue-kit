@@ -387,7 +387,7 @@
 
 I clean contact CSVs before CRM import: duplicate people/companies, bad emails, inconsistent phone numbers, unmapped fields, missing required columns, and repeatable cleanup scripts.
 
-Fixed-scope CRM import rescue starts at $500. If you send a sample export, I can tell you what will break before you upload it.`;
+Fixed-scope CRM import rescue starts at $199, with a $49 sample audit. If you send a sample export, I can tell you what will break before you upload it.`;
     await copyText(text);
     setStatus("Outreach script copied.");
   }

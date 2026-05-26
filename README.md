@@ -71,7 +71,7 @@ See `PROSPECTS.md` for the first outreach segments, search queries, and partner 
 
 ### CRM Import Rescue
 
-Fixed-scope projects from `$500-$2,000`.
+Entry offers from `$49`; cleaned import rescues from `$199`; repeatable workflows from `$500-$2,000`.
 
 Deliverables:
 
@@ -108,7 +108,7 @@ Quick question: do you have a HubSpot, Salesforce, or Airtable import coming up 
 
 I clean contact CSVs before CRM import: duplicate people/companies, bad emails, inconsistent phone numbers, unmapped fields, missing required columns, and repeatable cleanup scripts.
 
-Fixed-scope CRM import rescue starts at $500. If you send a sample export, I can tell you what will break before you upload it.
+Fixed-scope CRM import rescue starts at $199, with a $49 sample audit. If you send a sample export, I can tell you what will break before you upload it.
 ```
 
 ## Better Buyer-Specific Versions
