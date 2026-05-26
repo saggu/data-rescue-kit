@@ -15,17 +15,21 @@ await mkdir(OUT_DIR, { recursive: true });
 const port = 9223;
 const profileDir = join(OUT_DIR, `.chrome-profile-${Date.now()}`);
 
-const chrome = spawn(CHROME, [
-  "--headless=new",
-  "--disable-gpu",
-  "--no-first-run",
-  "--no-default-browser-check",
-  "--hide-scrollbars",
-  `--remote-debugging-port=${port}`,
-  `--user-data-dir=${profileDir}`,
-  `--window-size=${WIDTH},${HEIGHT}`,
-  APP_URL,
-], { stdio: "ignore" });
+const chrome = spawn(
+  CHROME,
+  [
+    "--headless=new",
+    "--disable-gpu",
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--hide-scrollbars",
+    `--remote-debugging-port=${port}`,
+    `--user-data-dir=${profileDir}`,
+    `--window-size=${WIDTH},${HEIGHT}`,
+    APP_URL,
+  ],
+  { stdio: "ignore" },
+);
 
 try {
   const wsUrl = await waitForWebSocketUrl(port);
@@ -50,38 +54,51 @@ try {
     image: await screenshot(cdp),
   });
 
-  await evaluate(cdp, `
+  await evaluate(
+    cdp,
+    `
     document.querySelector("#presetSelect").value = "salesforce";
     document.querySelector("#presetSelect").dispatchEvent(new Event("change", { bubbles: true }));
     window.scrollTo({ top: 0 });
-  `);
+  `,
+  );
   await sleep(300);
   scenes.push({
     caption: "Switch export targets for HubSpot, Salesforce, or Airtable.",
     image: await screenshot(cdp),
   });
 
-  await evaluate(cdp, `
+  await evaluate(
+    cdp,
+    `
     document.querySelector("#fieldMapping").closest(".section-panel").scrollIntoView({ block: "start" });
-  `);
+  `,
+  );
   await sleep(300);
   scenes.push({
     caption: "Review how messy source columns map into required CRM fields.",
     image: await screenshot(cdp),
   });
 
-  await evaluate(cdp, `
+  await evaluate(
+    cdp,
+    `
     document.querySelector("#crmReadiness").closest(".section-panel").scrollIntoView({ block: "center" });
-  `);
+  `,
+  );
   await sleep(300);
   scenes.push({
-    caption: "Catch import blockers before upload: bad emails, duplicate contacts, and missing fields.",
+    caption:
+      "Catch import blockers before upload: bad emails, duplicate contacts, and missing fields.",
     image: await screenshot(cdp),
   });
 
-  await evaluate(cdp, `
+  await evaluate(
+    cdp,
+    `
     document.querySelector("#previewTable").closest(".section-panel").scrollIntoView({ block: "start" });
-  `);
+  `,
+  );
   await sleep(300);
   scenes.push({
     caption: "Export a CRM-ready CSV and a client-ready cleanup report.",
@@ -106,8 +123,12 @@ async function waitForWebSocketUrl(port) {
       const res = await fetch(url);
       if (res.ok) {
         const targets = await res.json();
-        const page = targets.find((target) => target.type === "page" && target.webSocketDebuggerUrl);
-        if (page) return page.webSocketDebuggerUrl;
+        const page = targets.find(
+          (target) => target.type === "page" && target.webSocketDebuggerUrl,
+        );
+        if (page) {
+          return page.webSocketDebuggerUrl;
+        }
       }
     } catch {
       await sleep(100);
@@ -135,7 +156,9 @@ function connectCdp(wsUrl) {
         },
         once(method) {
           return new Promise((resolveEvent) => {
-            if (!listeners.has(method)) listeners.set(method, []);
+            if (!listeners.has(method)) {
+              listeners.set(method, []);
+            }
             listeners.get(method).push(resolveEvent);
           });
         },
@@ -149,12 +172,17 @@ function connectCdp(wsUrl) {
       if (msg.id && pending.has(msg.id)) {
         const { resolve, reject } = pending.get(msg.id);
         pending.delete(msg.id);
-        if (msg.error) reject(new Error(msg.error.message));
-        else resolve(msg.result || {});
+        if (msg.error) {
+          reject(new Error(msg.error.message));
+        } else {
+          resolve(msg.result || {});
+        }
       } else if (msg.method && listeners.has(msg.method)) {
         const list = listeners.get(msg.method);
         const listener = list.shift();
-        if (listener) listener(msg.params || {});
+        if (listener) {
+          listener(msg.params || {});
+        }
       }
     });
     ws.addEventListener("error", reject);

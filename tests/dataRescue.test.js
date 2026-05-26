@@ -18,7 +18,14 @@ assert.equal(analysis.duplicates.duplicateRowCount, 1);
 assert.ok(analysis.issues.length > 0);
 
 const cleaned = rescue.cleanTable(table, analysis);
-assert.deepEqual(cleaned.headers, ["full_name", "work_email", "mobile_phone", "company_name", "signup_date", "spend"]);
+assert.deepEqual(cleaned.headers, [
+  "full_name",
+  "work_email",
+  "mobile_phone",
+  "company_name",
+  "signup_date",
+  "spend",
+]);
 assert.equal(cleaned.rows.length, 3);
 assert.equal(cleaned.rows[0][1], "jordan@acme.com");
 assert.equal(cleaned.rows[0][2], "(310) 555-0199");

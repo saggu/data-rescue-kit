@@ -44,6 +44,17 @@ python3 -m http.server 4173
 npm run record
 ```
 
+## Quality Checks
+
+```bash
+npm run lint
+npm run format:check
+npm test
+npm run check
+```
+
+Use `npm run format` to apply Prettier formatting. GitHub Actions runs `npm run check` before deploying the site.
+
 ## Prospecting
 
 See `PROSPECTS.md` for the first outreach segments, search queries, and partner targets.

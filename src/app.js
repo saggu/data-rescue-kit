@@ -67,7 +67,9 @@
     });
 
     els.fileInput.addEventListener("change", handleFileInput);
-    els.loadSample.addEventListener("click", () => analyzeText(SAMPLE_DATA, "sample-crm-contacts.csv"));
+    els.loadSample.addEventListener("click", () =>
+      analyzeText(SAMPLE_DATA, "sample-crm-contacts.csv"),
+    );
     els.downloadCsv.addEventListener("click", downloadCleanCsv);
     els.downloadReport.addEventListener("click", downloadReport);
     els.copyReport.addEventListener("click", copyReport);
@@ -90,7 +92,9 @@
       event.preventDefault();
       els.dropZone.classList.remove("is-dragging");
       const file = event.dataTransfer.files[0];
-      if (file) readFile(file);
+      if (file) {
+        readFile(file);
+      }
     });
 
     analyzeText(SAMPLE_DATA, "sample-crm-contacts.csv");
@@ -98,7 +102,9 @@
 
   function handleFileInput(event) {
     const file = event.target.files[0];
-    if (file) readFile(file);
+    if (file) {
+      readFile(file);
+    }
   }
 
   function readFile(file) {
@@ -141,7 +147,9 @@
   }
 
   function rerunClean() {
-    if (!state.table || !state.analysis) return;
+    if (!state.table || !state.analysis) {
+      return;
+    }
     state.cleaned = rescue.cleanTable(state.table, state.analysis, collectOptions());
     state.exported = rescue.applyCrmPreset(state.cleaned, state.preset);
     state.crm = rescue.analyzeCrmReadiness(state.exported, state.preset);
@@ -179,36 +187,53 @@
       els.issueList.innerHTML = '<li class="quiet">No priority issues found.</li>';
       return;
     }
-    els.issueList.innerHTML = issues.slice(0, 8).map((issue) => {
-      return `<li><span class="severity ${issue.severity}">${issue.severity}</span>${escapeHtml(issue.message)}</li>`;
-    }).join("");
+    els.issueList.innerHTML = issues
+      .slice(0, 8)
+      .map((issue) => {
+        return `<li><span class="severity ${issue.severity}">${issue.severity}</span>${escapeHtml(issue.message)}</li>`;
+      })
+      .join("");
   }
 
   function renderColumnProfile(columns) {
-    els.columnProfile.innerHTML = columns.map((column) => {
-      const missing = pct(column.missingRate);
-      const notes = [];
-      if (column.whitespaceCount) notes.push(`${column.whitespaceCount} padded`);
-      if (column.casingIssues) notes.push(`${column.casingIssues} casing`);
-      if (column.inferredType === "mixed") notes.push("mixed formats");
-      return `<tr>
+    els.columnProfile.innerHTML = columns
+      .map((column) => {
+        const missing = pct(column.missingRate);
+        const notes = [];
+        if (column.whitespaceCount) {
+          notes.push(`${column.whitespaceCount} padded`);
+        }
+        if (column.casingIssues) {
+          notes.push(`${column.casingIssues} casing`);
+        }
+        if (column.inferredType === "mixed") {
+          notes.push("mixed formats");
+        }
+        return `<tr>
         <td><strong>${escapeHtml(column.header)}</strong><span>${escapeHtml(column.normalizedHeader)}</span></td>
         <td>${escapeHtml(column.inferredType)}</td>
         <td>${missing}</td>
         <td>${number(column.uniqueCount)}</td>
         <td>${notes.length ? escapeHtml(notes.join(", ")) : '<span class="quiet">ok</span>'}</td>
       </tr>`;
-    }).join("");
+      })
+      .join("");
   }
 
   function renderCrmReadiness(crm) {
     const blockers = crm.issues.length
-      ? crm.issues.map((issue) => `<li><span class="severity ${issue.severity}">${issue.severity}</span>${escapeHtml(issue.message)}</li>`).join("")
+      ? crm.issues
+          .map(
+            (issue) =>
+              `<li><span class="severity ${issue.severity}">${issue.severity}</span>${escapeHtml(issue.message)}</li>`,
+          )
+          .join("")
       : '<li class="quiet">No import blockers found for this CRM target.</li>';
 
-    const duplicateRows = crm.duplicateEmailGroups
-      .map((group) => group.map((item) => item.row).join(", "))
-      .join("; ") || "none";
+    const duplicateRows =
+      crm.duplicateEmailGroups
+        .map((group) => group.map((item) => item.row).join(", "))
+        .join("; ") || "none";
 
     els.crmReadiness.innerHTML = `
       <div class="crm-score">
@@ -224,16 +249,18 @@
   }
 
   function renderFieldMapping(exported) {
-    els.fieldMapping.innerHTML = exported.mapping.map((item) => {
-      const source = item.derivedFrom.length
-        ? `derived from ${item.derivedFrom.join(" + ")}`
-        : item.source || "not mapped";
-      return `<tr>
+    els.fieldMapping.innerHTML = exported.mapping
+      .map((item) => {
+        const source = item.derivedFrom.length
+          ? `derived from ${item.derivedFrom.join(" + ")}`
+          : item.source || "not mapped";
+        return `<tr>
         <td><strong>${escapeHtml(item.target)}</strong></td>
         <td>${escapeHtml(source)}</td>
         <td>${item.required ? "yes" : "no"}</td>
       </tr>`;
-    }).join("");
+      })
+      .join("");
   }
 
   function renderDuplicates(analysis) {
@@ -243,9 +270,11 @@
       ? exact.map((group) => `<li>Rows ${group.join(", ")}</li>`).join("")
       : '<li class="quiet">No exact duplicate rows.</li>';
     const fuzzyHtml = fuzzy.length
-      ? fuzzy.map((group) => {
-        return `<li><strong>${escapeHtml(group.column)}</strong>: rows ${group.rows.join(" and ")} (${Math.round(group.score * 100)}%)<span>${escapeHtml(group.values.join(" / "))}</span></li>`;
-      }).join("")
+      ? fuzzy
+          .map((group) => {
+            return `<li><strong>${escapeHtml(group.column)}</strong>: rows ${group.rows.join(" and ")} (${Math.round(group.score * 100)}%)<span>${escapeHtml(group.values.join(" / "))}</span></li>`;
+          })
+          .join("")
       : '<li class="quiet">No fuzzy duplicate candidates in the scanned rows.</li>';
 
     els.duplicatePanel.innerHTML = `
@@ -260,16 +289,22 @@
   }
 
   function renderChanges(changes) {
-    els.changeList.innerHTML = Object.entries(changes).map(([key, value]) => {
-      return `<li><span>${escapeHtml(labelize(key))}</span><strong>${number(value)}</strong></li>`;
-    }).join("");
+    els.changeList.innerHTML = Object.entries(changes)
+      .map(([key, value]) => {
+        return `<li><span>${escapeHtml(labelize(key))}</span><strong>${number(value)}</strong></li>`;
+      })
+      .join("");
   }
 
   function renderPreview() {
-    const table = state.activePreview === "raw"
-      ? state.table
-      : { headers: state.exported.headers, rows: state.exported.rows };
-    const title = state.activePreview === "raw" ? "Raw preview" : `${state.exported.presetLabel} import preview`;
+    const table =
+      state.activePreview === "raw"
+        ? state.table
+        : { headers: state.exported.headers, rows: state.exported.rows };
+    const title =
+      state.activePreview === "raw"
+        ? "Raw preview"
+        : `${state.exported.presetLabel} import preview`;
     els.previewTitle.textContent = title;
     els.rawTab.classList.toggle("is-active", state.activePreview === "raw");
     els.cleanTab.classList.toggle("is-active", state.activePreview === "clean");
@@ -278,9 +313,11 @@
 
   function buildTableHtml(headers, rows) {
     const head = `<thead><tr>${headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("")}</tr></thead>`;
-    const body = rows.map((row) => {
-      return `<tr>${headers.map((_, index) => `<td>${escapeHtml(row[index] || "")}</td>`).join("")}</tr>`;
-    }).join("");
+    const body = rows
+      .map((row) => {
+        return `<tr>${headers.map((_, index) => `<td>${escapeHtml(row[index] || "")}</td>`).join("")}</tr>`;
+      })
+      .join("");
     return `${head}<tbody>${body}</tbody>`;
   }
 
@@ -297,14 +334,18 @@
   }
 
   function downloadCleanCsv() {
-    if (!state.cleaned) return;
+    if (!state.cleaned) {
+      return;
+    }
     const csv = rescue.toDelimited(state.exported.headers, state.exported.rows, ",");
     const base = state.fileName.replace(/\.[^.]+$/, "") || "data";
     downloadBlob(csv, `${base}-${state.preset}-import.csv`, "text/csv;charset=utf-8");
   }
 
   function downloadReport() {
-    if (!state.cleaned) return;
+    if (!state.cleaned) {
+      return;
+    }
     const report = rescue.buildMarkdownReport(state.table, state.analysis, state.cleaned, {
       exported: state.exported,
       crm: state.crm,
@@ -314,7 +355,9 @@
   }
 
   async function copyReport() {
-    if (!state.cleaned) return;
+    if (!state.cleaned) {
+      return;
+    }
     const report = rescue.buildMarkdownReport(state.table, state.analysis, state.cleaned, {
       exported: state.exported,
       crm: state.crm,
@@ -364,9 +407,15 @@ Fixed-scope CRM import rescue starts at $500. If you send a sample export, I can
   }
 
   function delimiterName(delimiter) {
-    if (delimiter === "\t") return "tab";
-    if (delimiter === ",") return "comma";
-    if (delimiter === ";") return "semicolon";
+    if (delimiter === "\t") {
+      return "tab";
+    }
+    if (delimiter === ",") {
+      return "comma";
+    }
+    if (delimiter === ";") {
+      return "semicolon";
+    }
     return delimiter || "auto";
   }
 

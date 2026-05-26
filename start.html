@@ -1,20 +1,22 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Start a fixed-scope CRM Import Rescue for a messy HubSpot, Salesforce, or Airtable contact CSV.">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Start a fixed-scope CRM Import Rescue for a messy HubSpot, Salesforce, or Airtable contact CSV."
+    />
     <title>Start CRM Import Rescue</title>
-    <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
     <script src="src/leadForm.js" defer></script>
   </head>
   <body class="landing-page intake-page">
     <header class="landing-nav">
       <a class="nav-brand" href="index.html">
         <span class="data-mark compact" aria-hidden="true">
-          <span></span><span></span><span></span>
-          <span></span><span></span><span></span>
+          <span></span><span></span><span></span> <span></span><span></span><span></span>
           <span></span><span></span><span></span>
         </span>
         <span>CRM Import Rescue</span>
@@ -29,10 +31,12 @@
     <main class="intake-layout">
       <section class="intake-copy" aria-labelledby="start-title">
         <p class="eyebrow">Fixed-scope CRM cleanup</p>
-        <h1 id="start-title">Send the import details. I will reply with the fastest rescue path.</h1>
+        <h1 id="start-title">
+          Send the import details. I will reply with the fastest rescue path.
+        </h1>
         <p>
-          Good first projects are messy contact exports, event lead lists, CRM migration files,
-          and monthly enrichment CSVs that need to land cleanly in HubSpot, Salesforce, or Airtable.
+          Good first projects are messy contact exports, event lead lists, CRM migration files, and
+          monthly enrichment CSVs that need to land cleanly in HubSpot, Salesforce, or Airtable.
         </p>
 
         <div class="price-stack" aria-label="Service options">
@@ -51,7 +55,8 @@
         </div>
 
         <p class="privacy-note">
-          Files are audited in-browser when you use the tool. For paid cleanup, send a sample first and remove sensitive fields until scope and handling are agreed.
+          Files are audited in-browser when you use the tool. For paid cleanup, send a sample first
+          and remove sensitive fields until scope and handling are agreed.
         </p>
       </section>
 
@@ -65,11 +70,18 @@
           <div class="form-grid">
             <label class="field">
               <span>Name</span>
-              <input name="name" autocomplete="name" required>
+              <input name="name" autocomplete="name" required />
             </label>
             <label class="field">
               <span>Email</span>
-              <input name="email" type="text" inputmode="email" autocomplete="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" required>
+              <input
+                name="email"
+                type="text"
+                inputmode="email"
+                autocomplete="email"
+                pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+                required
+              />
             </label>
           </div>
 
@@ -86,14 +98,14 @@
             </label>
             <label class="field">
               <span>Rows in file</span>
-              <input name="rows" inputmode="numeric" placeholder="Example: 4,800">
+              <input name="rows" inputmode="numeric" placeholder="Example: 4,800" />
             </label>
           </div>
 
           <div class="form-grid">
             <label class="field">
               <span>Deadline</span>
-              <input name="deadline" placeholder="Example: this Friday">
+              <input name="deadline" placeholder="Example: this Friday" />
             </label>
             <label class="field">
               <span>Budget range</span>
@@ -108,12 +120,19 @@
 
           <label class="field">
             <span>What is broken or risky?</span>
-            <textarea name="problem" rows="6" placeholder="Duplicates, bad emails, unmapped fields, missing required values, failed import errors, messy company names..." required></textarea>
+            <textarea
+              name="problem"
+              rows="6"
+              placeholder="Duplicates, bad emails, unmapped fields, missing required values, failed import errors, messy company names..."
+              required
+            ></textarea>
           </label>
 
           <div class="lead-actions">
             <button type="submit">Open email draft</button>
-            <button class="secondary-action light" type="button" id="copy-lead">Copy inquiry</button>
+            <button class="secondary-action light" type="button" id="copy-lead">
+              Copy inquiry
+            </button>
           </div>
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>

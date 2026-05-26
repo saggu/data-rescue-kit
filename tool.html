@@ -1,19 +1,18 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CRM Import Rescue Tool</title>
-    <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app-shell">
       <aside class="side-panel">
         <div class="brand-row">
           <div class="data-mark" aria-hidden="true">
-            <span></span><span></span><span></span>
-            <span></span><span></span><span></span>
+            <span></span><span></span><span></span> <span></span><span></span><span></span>
             <span></span><span></span><span></span>
           </div>
           <div>
@@ -24,21 +23,38 @@
 
         <section class="upload-panel" id="dropZone">
           <label for="fileInput">Upload CSV or TSV</label>
-          <input id="fileInput" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values">
+          <input
+            id="fileInput"
+            type="file"
+            accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values"
+          />
           <button id="loadSample" type="button">Load CRM sample</button>
           <p id="statusLine">Ready.</p>
         </section>
 
         <section class="control-panel">
           <h2>Cleaning</h2>
-          <label><input type="checkbox" data-option="normalizeHeaders" checked> Normalize headers</label>
-          <label><input type="checkbox" data-option="trimCells" checked> Trim cells</label>
-          <label><input type="checkbox" data-option="normalizeEmpty" checked> Clear empty tokens</label>
-          <label><input type="checkbox" data-option="lowerEmail" checked> Lowercase emails</label>
-          <label><input type="checkbox" data-option="normalizePhones" checked> Format phones</label>
-          <label><input type="checkbox" data-option="normalizeDates" checked> ISO dates</label>
-          <label><input type="checkbox" data-option="normalizeNumbers" checked> Plain numbers</label>
-          <label><input type="checkbox" data-option="dropDuplicateRows" checked> Drop exact duplicates</label>
+          <label
+            ><input type="checkbox" data-option="normalizeHeaders" checked /> Normalize
+            headers</label
+          >
+          <label><input type="checkbox" data-option="trimCells" checked /> Trim cells</label>
+          <label
+            ><input type="checkbox" data-option="normalizeEmpty" checked /> Clear empty
+            tokens</label
+          >
+          <label><input type="checkbox" data-option="lowerEmail" checked /> Lowercase emails</label>
+          <label
+            ><input type="checkbox" data-option="normalizePhones" checked /> Format phones</label
+          >
+          <label><input type="checkbox" data-option="normalizeDates" checked /> ISO dates</label>
+          <label
+            ><input type="checkbox" data-option="normalizeNumbers" checked /> Plain numbers</label
+          >
+          <label
+            ><input type="checkbox" data-option="dropDuplicateRows" checked /> Drop exact
+            duplicates</label
+          >
         </section>
 
         <section class="export-panel">
@@ -58,7 +74,10 @@
 
         <section class="sell-panel">
           <h2>Offer</h2>
-          <p>$500 CRM import cleanup: duplicate contacts, broken fields, and repeatable upload scripts.</p>
+          <p>
+            $500 CRM import cleanup: duplicate contacts, broken fields, and repeatable upload
+            scripts.
+          </p>
           <button id="outreachCopy" type="button">Copy outreach</button>
         </section>
       </aside>

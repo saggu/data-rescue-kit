@@ -14,19 +14,51 @@
       required: ["email"],
       fields: [
         { key: "email", label: "email", aliases: ["email", "email_address", "work_email"] },
-        { key: "firstname", label: "firstname", aliases: ["first_name", "firstname", "given_name"] },
-        { key: "lastname", label: "lastname", aliases: ["last_name", "lastname", "surname", "family_name"] },
-        { key: "phone", label: "phone", aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"] },
-        { key: "company", label: "company", aliases: ["company", "company_name", "account", "account_name", "organization"] },
+        {
+          key: "firstname",
+          label: "firstname",
+          aliases: ["first_name", "firstname", "given_name"],
+        },
+        {
+          key: "lastname",
+          label: "lastname",
+          aliases: ["last_name", "lastname", "surname", "family_name"],
+        },
+        {
+          key: "phone",
+          label: "phone",
+          aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"],
+        },
+        {
+          key: "company",
+          label: "company",
+          aliases: ["company", "company_name", "account", "account_name", "organization"],
+        },
         { key: "jobtitle", label: "jobtitle", aliases: ["title", "job_title", "role"] },
         { key: "city", label: "city", aliases: ["city"] },
         { key: "state", label: "state", aliases: ["state", "province", "region"] },
         { key: "country", label: "country", aliases: ["country"] },
-        { key: "lifecyclestage", label: "lifecyclestage", aliases: ["lifecycle_stage", "lifecycle", "stage"] },
-        { key: "hs_lead_status", label: "hs_lead_status", aliases: ["lead_status", "status", "crm_status"] },
+        {
+          key: "lifecyclestage",
+          label: "lifecyclestage",
+          aliases: ["lifecycle_stage", "lifecycle", "stage"],
+        },
+        {
+          key: "hs_lead_status",
+          label: "hs_lead_status",
+          aliases: ["lead_status", "status", "crm_status"],
+        },
         { key: "lead_source", label: "lead_source", aliases: ["lead_source", "source", "channel"] },
-        { key: "hubspot_owner_id", label: "hubspot_owner_id", aliases: ["owner", "sales_owner", "rep", "assigned_to"] },
-        { key: "notes_last_contacted", label: "notes_last_contacted", aliases: ["last_contacted", "last_touch", "last_contact_date"] },
+        {
+          key: "hubspot_owner_id",
+          label: "hubspot_owner_id",
+          aliases: ["owner", "sales_owner", "rep", "assigned_to"],
+        },
+        {
+          key: "notes_last_contacted",
+          label: "notes_last_contacted",
+          aliases: ["last_contacted", "last_touch", "last_contact_date"],
+        },
         { key: "notes", label: "notes", aliases: ["notes", "description", "memo"] },
       ],
     },
@@ -34,11 +66,27 @@
       label: "Salesforce leads",
       required: ["LastName", "Company"],
       fields: [
-        { key: "FirstName", label: "FirstName", aliases: ["first_name", "firstname", "given_name"] },
-        { key: "LastName", label: "LastName", aliases: ["last_name", "lastname", "surname", "family_name"] },
+        {
+          key: "FirstName",
+          label: "FirstName",
+          aliases: ["first_name", "firstname", "given_name"],
+        },
+        {
+          key: "LastName",
+          label: "LastName",
+          aliases: ["last_name", "lastname", "surname", "family_name"],
+        },
         { key: "Email", label: "Email", aliases: ["email", "email_address", "work_email"] },
-        { key: "Phone", label: "Phone", aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"] },
-        { key: "Company", label: "Company", aliases: ["company", "company_name", "account", "account_name", "organization"] },
+        {
+          key: "Phone",
+          label: "Phone",
+          aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"],
+        },
+        {
+          key: "Company",
+          label: "Company",
+          aliases: ["company", "company_name", "account", "account_name", "organization"],
+        },
         { key: "Title", label: "Title", aliases: ["title", "job_title", "role"] },
         { key: "LeadSource", label: "LeadSource", aliases: ["lead_source", "source", "channel"] },
         { key: "Status", label: "Status", aliases: ["lead_status", "status", "crm_status"] },
@@ -53,15 +101,31 @@
       label: "Airtable contacts",
       required: ["Name"],
       fields: [
-        { key: "Name", label: "Name", aliases: ["full_name", "name", "contact_name", "customer_name"] },
+        {
+          key: "Name",
+          label: "Name",
+          aliases: ["full_name", "name", "contact_name", "customer_name"],
+        },
         { key: "Email", label: "Email", aliases: ["email", "email_address", "work_email"] },
-        { key: "Phone", label: "Phone", aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"] },
-        { key: "Company", label: "Company", aliases: ["company", "company_name", "account", "account_name", "organization"] },
+        {
+          key: "Phone",
+          label: "Phone",
+          aliases: ["phone", "phone_number", "mobile", "cell", "cell_phone"],
+        },
+        {
+          key: "Company",
+          label: "Company",
+          aliases: ["company", "company_name", "account", "account_name", "organization"],
+        },
         { key: "Title", label: "Title", aliases: ["title", "job_title", "role"] },
         { key: "Source", label: "Source", aliases: ["lead_source", "source", "channel"] },
         { key: "Status", label: "Status", aliases: ["lead_status", "status", "crm_status"] },
         { key: "Owner", label: "Owner", aliases: ["owner", "sales_owner", "rep", "assigned_to"] },
-        { key: "Last Contacted", label: "Last Contacted", aliases: ["last_contacted", "last_touch", "last_contact_date"] },
+        {
+          key: "Last Contacted",
+          label: "Last Contacted",
+          aliases: ["last_contacted", "last_touch", "last_contact_date"],
+        },
         { key: "Notes", label: "Notes", aliases: ["notes", "description", "memo"] },
       ],
     },
@@ -174,12 +238,19 @@
 
   function toDelimited(headers, rows, delimiter) {
     const delim = delimiter || ",";
-    return [headers, ...rows].map((row) => row.map((cell) => escapeCell(cell, delim)).join(delim)).join("\n");
+    return [headers, ...rows]
+      .map((row) => row.map((cell) => escapeCell(cell, delim)).join(delim))
+      .join("\n");
   }
 
   function escapeCell(value, delimiter) {
     const text = value == null ? "" : String(value);
-    if (text.includes('"') || text.includes("\n") || text.includes("\r") || text.includes(delimiter)) {
+    if (
+      text.includes('"') ||
+      text.includes("\n") ||
+      text.includes("\r") ||
+      text.includes(delimiter)
+    ) {
       return '"' + text.replace(/"/g, '""') + '"';
     }
     return text;
@@ -194,7 +265,14 @@
     const columns = headers.map((header, index) => profileColumn(header, index, rows));
     const duplicates = findDuplicateRows(rows);
     const fuzzyMatches = findFuzzyMatches(headers, rows);
-    const issues = buildIssues({ rowCount, columnCount, duplicateHeaders, columns, duplicates, fuzzyMatches });
+    const issues = buildIssues({
+      rowCount,
+      columnCount,
+      duplicateHeaders,
+      columns,
+      duplicates,
+      fuzzyMatches,
+    });
     const qualityScore = scoreQuality({ rowCount, columnCount, columns, duplicates, issues });
 
     return {
@@ -210,7 +288,7 @@
   }
 
   function profileColumn(header, index, rows) {
-    const values = rows.map((row) => row[index] == null ? "" : String(row[index]));
+    const values = rows.map((row) => (row[index] == null ? "" : String(row[index])));
     const trimmedValues = values.map((value) => value.trim());
     const nonEmpty = trimmedValues.filter((value) => !isEmptyish(value));
     const missingCount = values.length - nonEmpty.length;
@@ -220,7 +298,9 @@
     const inferredType = inferType(typeCounts, nonEmpty.length);
     const topValues = topValueCounts(nonEmpty);
     const casingGroups = groupBy(nonEmpty, (value) => value.toLowerCase());
-    const casingIssues = Object.values(casingGroups).filter((items) => new Set(items).size > 1).length;
+    const casingIssues = Object.values(casingGroups).filter(
+      (items) => new Set(items).size > 1,
+    ).length;
     const parseableDates = nonEmpty.filter((value) => Boolean(parseDate(value))).length;
     const parseableNumbers = nonEmpty.filter((value) => isNumericLike(value)).length;
 
@@ -248,38 +328,53 @@
   function countTypes(values) {
     const counts = { number: 0, date: 0, email: 0, phone: 0, url: 0, boolean: 0, text: 0 };
     for (const value of values) {
-      if (isEmail(value)) counts.email += 1;
-      else if (isUrl(value)) counts.url += 1;
-      else if (isBooleanLike(value)) counts.boolean += 1;
-      else if (parseDate(value)) counts.date += 1;
-      else if (isPhoneLike(value)) counts.phone += 1;
-      else if (isNumericLike(value)) counts.number += 1;
-      else counts.text += 1;
+      if (isEmail(value)) {
+        counts.email += 1;
+      } else if (isUrl(value)) {
+        counts.url += 1;
+      } else if (isBooleanLike(value)) {
+        counts.boolean += 1;
+      } else if (parseDate(value)) {
+        counts.date += 1;
+      } else if (isPhoneLike(value)) {
+        counts.phone += 1;
+      } else if (isNumericLike(value)) {
+        counts.number += 1;
+      } else {
+        counts.text += 1;
+      }
     }
     return counts;
   }
 
   function inferType(counts, total) {
-    if (!total) return "empty";
+    if (!total) {
+      return "empty";
+    }
     const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     const [type, count] = entries[0];
     return count / total >= 0.72 ? type : "mixed";
   }
 
   function cleanTable(table, analysis, options) {
-    const settings = Object.assign({
-      normalizeHeaders: true,
-      trimCells: true,
-      normalizeEmpty: true,
-      lowerEmail: true,
-      normalizeDates: true,
-      normalizeNumbers: true,
-      normalizePhones: true,
-      dropDuplicateRows: true,
-    }, options || {});
+    const settings = Object.assign(
+      {
+        normalizeHeaders: true,
+        trimCells: true,
+        normalizeEmpty: true,
+        lowerEmail: true,
+        normalizeDates: true,
+        normalizeNumbers: true,
+        normalizePhones: true,
+        dropDuplicateRows: true,
+      },
+      options || {},
+    );
 
     const columns = analysis && analysis.columns ? analysis.columns : analyzeTable(table).columns;
-    const headers = settings.normalizeHeaders ? makeUniqueHeaders(table.headers.map(normalizeHeader)) : table.headers.slice();
+    const headers = settings.normalizeHeaders
+      ? makeUniqueHeaders(table.headers.map(normalizeHeader))
+      : table.headers.slice();
     const changes = {
       headersRenamed: 0,
       cellsTrimmed: 0,
@@ -292,7 +387,9 @@
     };
 
     headers.forEach((header, index) => {
-      if (header !== table.headers[index]) changes.headersRenamed += 1;
+      if (header !== table.headers[index]) {
+        changes.headersRenamed += 1;
+      }
     });
 
     const cleanedRows = [];
@@ -305,17 +402,23 @@
 
         if (settings.trimCells) {
           value = value.trim();
-          if (value !== original) changes.cellsTrimmed += 1;
+          if (value !== original) {
+            changes.cellsTrimmed += 1;
+          }
         }
 
         if (settings.normalizeEmpty && isEmptyish(value)) {
-          if (value !== "") changes.emptyTokensCleared += 1;
+          if (value !== "") {
+            changes.emptyTokensCleared += 1;
+          }
           value = "";
         }
 
         if (value !== "" && settings.lowerEmail && column.inferredType === "email") {
           const lowered = value.toLowerCase();
-          if (lowered !== value) changes.emailsLowered += 1;
+          if (lowered !== value) {
+            changes.emailsLowered += 1;
+          }
           value = lowered;
         }
 
@@ -385,10 +488,20 @@
     });
 
     const targetHeaders = preset.fields.map((field) => field.label);
-    const targetRows = sourceRows.map((row) => mapping.map((item) => resolveMappedValue(item, row, sourceIndex)));
-    const mappedSources = new Set(mapping.flatMap((item) => item.derivedFrom.length ? item.derivedFrom : [item.source]).filter(Boolean));
-    const unmappedHeaders = sourceHeaders.filter((header) => !mappedSources.has(normalizeHeader(header)));
-    const missingFields = mapping.filter((item) => !item.source && item.derivedFrom.length === 0).map((item) => item.target);
+    const targetRows = sourceRows.map((row) =>
+      mapping.map((item) => resolveMappedValue(item, row, sourceIndex)),
+    );
+    const mappedSources = new Set(
+      mapping
+        .flatMap((item) => (item.derivedFrom.length ? item.derivedFrom : [item.source]))
+        .filter(Boolean),
+    );
+    const unmappedHeaders = sourceHeaders.filter(
+      (header) => !mappedSources.has(normalizeHeader(header)),
+    );
+    const missingFields = mapping
+      .filter((item) => !item.source && item.derivedFrom.length === 0)
+      .map((item) => item.target);
 
     return {
       presetKey: presetKey || "hubspot",
@@ -417,7 +530,9 @@
       const index = headerIndex[label] != null ? headerIndex[label] : headerIndex[required];
       const missingRows = [];
       rows.forEach((row, rowIndex) => {
-        if (!row[index] || isEmptyish(row[index])) missingRows.push(rowIndex + 2);
+        if (!row[index] || isEmptyish(row[index])) {
+          missingRows.push(rowIndex + 2);
+        }
       });
       if (missingRows.length) {
         requiredMissing.push({ field: label, rows: missingRows });
@@ -426,13 +541,21 @@
 
     const emailIndex = firstExistingIndex(headerIndex, ["email", "Email"]);
     const phoneIndex = firstExistingIndex(headerIndex, ["phone", "Phone"]);
-    const emails = emailIndex == null ? [] : rows.map((row, index) => ({ value: row[emailIndex], row: index + 2 }));
+    const emails =
+      emailIndex == null
+        ? []
+        : rows.map((row, index) => ({ value: row[emailIndex], row: index + 2 }));
     const invalidEmails = emails.filter((item) => item.value && !isEmail(item.value));
-    const duplicateEmailGroups = groupDuplicates(emails.filter((item) => item.value && isEmail(item.value)), (item) => item.value.toLowerCase());
-    const invalidPhones = phoneIndex == null
-      ? []
-      : rows.map((row, index) => ({ value: row[phoneIndex], row: index + 2 }))
-        .filter((item) => item.value && !isPhoneLike(item.value));
+    const duplicateEmailGroups = groupDuplicates(
+      emails.filter((item) => item.value && isEmail(item.value)),
+      (item) => item.value.toLowerCase(),
+    );
+    const invalidPhones =
+      phoneIndex == null
+        ? []
+        : rows
+            .map((row, index) => ({ value: row[phoneIndex], row: index + 2 }))
+            .filter((item) => item.value && !isPhoneLike(item.value));
 
     const issues = [];
     for (const item of requiredMissing) {
@@ -494,12 +617,20 @@
     lines.push("## Summary");
     lines.push("");
     lines.push(`- Quality score: ${analysis.qualityScore}/100`);
-    if (crm) lines.push(`- CRM import readiness: ${crm.score}/100 for ${crm.presetLabel}`);
+    if (crm) {
+      lines.push(`- CRM import readiness: ${crm.score}/100 for ${crm.presetLabel}`);
+    }
     lines.push(`- Input size: ${analysis.rowCount} rows x ${analysis.columnCount} columns`);
     lines.push(`- Exact duplicate rows: ${analysis.duplicates.duplicateRowCount}`);
     lines.push(`- Possible fuzzy duplicate groups: ${analysis.fuzzyMatches.groups.length}`);
-    lines.push(`- Cleaned output size: ${cleaned.rows.length} rows x ${cleaned.headers.length} columns`);
-    if (exported) lines.push(`- Import export size: ${exported.rows.length} rows x ${exported.headers.length} columns`);
+    lines.push(
+      `- Cleaned output size: ${cleaned.rows.length} rows x ${cleaned.headers.length} columns`,
+    );
+    if (exported) {
+      lines.push(
+        `- Import export size: ${exported.rows.length} rows x ${exported.headers.length} columns`,
+      );
+    }
     lines.push("");
     lines.push("## Cleaning Applied");
     lines.push("");
@@ -516,7 +647,9 @@
         const source = item.derivedFrom.length
           ? `derived from ${item.derivedFrom.join(" + ")}`
           : item.source || "not mapped";
-        lines.push(`| ${escapeMarkdown(item.target)} | ${escapeMarkdown(source)} | ${item.required ? "yes" : "no"} |`);
+        lines.push(
+          `| ${escapeMarkdown(item.target)} | ${escapeMarkdown(source)} | ${item.required ? "yes" : "no"} |`,
+        );
       }
     }
     if (crm) {
@@ -548,15 +681,25 @@
     lines.push("|---|---:|---:|---:|---|");
     for (const column of analysis.columns) {
       const notes = [];
-      if (column.whitespaceCount) notes.push(`${column.whitespaceCount} padded`);
-      if (column.casingIssues) notes.push(`${column.casingIssues} casing groups`);
-      if (column.inferredType === "mixed") notes.push("mixed formats");
-      lines.push(`| ${escapeMarkdown(column.header)} | ${column.inferredType} | ${column.missingCount} | ${column.uniqueCount} | ${notes.join(", ") || "ok"} |`);
+      if (column.whitespaceCount) {
+        notes.push(`${column.whitespaceCount} padded`);
+      }
+      if (column.casingIssues) {
+        notes.push(`${column.casingIssues} casing groups`);
+      }
+      if (column.inferredType === "mixed") {
+        notes.push("mixed formats");
+      }
+      lines.push(
+        `| ${escapeMarkdown(column.header)} | ${column.inferredType} | ${column.missingCount} | ${column.uniqueCount} | ${notes.join(", ") || "ok"} |`,
+      );
     }
     lines.push("");
     lines.push("## Recommended Next Step");
     lines.push("");
-    lines.push("Run one small pilot import, review rejected records, then turn the cleanup rules into a repeatable monthly CRM import workflow.");
+    lines.push(
+      "Run one small pilot import, review rejected records, then turn the cleanup rules into a repeatable monthly CRM import workflow.",
+    );
     return lines.join("\n");
   }
 
@@ -620,7 +763,9 @@
   }
 
   function scoreQuality(context) {
-    if (!context.rowCount || !context.columnCount) return 0;
+    if (!context.rowCount || !context.columnCount) {
+      return 0;
+    }
     const totalCells = context.rowCount * context.columnCount;
     const missing = context.columns.reduce((sum, column) => sum + column.missingCount, 0);
     const whitespace = context.columns.reduce((sum, column) => sum + column.whitespaceCount, 0);
@@ -643,14 +788,18 @@
       const key = normalizeHeader(header);
       counts[key] = (counts[key] || 0) + 1;
     }
-    return Object.entries(counts).filter((entry) => entry[1] > 1).map((entry) => entry[0]);
+    return Object.entries(counts)
+      .filter((entry) => entry[1] > 1)
+      .map((entry) => entry[0]);
   }
 
   function findDuplicateRows(rows) {
     const groups = {};
     rows.forEach((row, index) => {
       const key = row.map(canonicalCell).join("\u001f");
-      if (!groups[key]) groups[key] = [];
+      if (!groups[key]) {
+        groups[key] = [];
+      }
       groups[key].push(index + 2);
     });
     const duplicateGroups = Object.values(groups).filter((items) => items.length > 1);
@@ -661,7 +810,9 @@
   function findFuzzyMatches(headers, rows) {
     const candidateColumns = headers
       .map((header, index) => ({ header, index, key: normalizeHeader(header) }))
-      .filter((column) => /(name|company|organization|account|customer|client|vendor)/.test(column.key));
+      .filter((column) =>
+        /(name|company|organization|account|customer|client|vendor)/.test(column.key),
+      );
     const groups = [];
     const maxRows = Math.min(rows.length, 250);
 
@@ -669,10 +820,14 @@
       const seenPairs = new Set();
       for (let i = 0; i < maxRows; i += 1) {
         const a = cleanComparable(rows[i][column.index]);
-        if (a.length < 4) continue;
+        if (a.length < 4) {
+          continue;
+        }
         for (let j = i + 1; j < maxRows; j += 1) {
           const b = cleanComparable(rows[j][column.index]);
-          if (b.length < 4 || a === b) continue;
+          if (b.length < 4 || a === b) {
+            continue;
+          }
           const score = similarity(a, b);
           if (score >= 0.86) {
             const pairKey = `${column.index}:${i}:${j}`;
@@ -711,7 +866,10 @@
   }
 
   function canonicalCell(value) {
-    return String(value == null ? "" : value).trim().toLowerCase().replace(/\s+/g, " ");
+    return String(value == null ? "" : value)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
   }
 
   function cleanComparable(value) {
@@ -723,7 +881,11 @@
   }
 
   function isEmptyish(value) {
-    return EMPTY_TOKENS.has(String(value == null ? "" : value).trim().toLowerCase());
+    return EMPTY_TOKENS.has(
+      String(value == null ? "" : value)
+        .trim()
+        .toLowerCase(),
+    );
   }
 
   function isEmail(value) {
@@ -737,7 +899,9 @@
 
   function normalizePhone(value) {
     const digits = String(value).replace(/\D/g, "");
-    if (!isPhoneLike(value)) return "";
+    if (!isPhoneLike(value)) {
+      return "";
+    }
     if (digits.length === 10) {
       return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
     }
@@ -748,7 +912,10 @@
   }
 
   function isPhoneColumn(column) {
-    return column.inferredType === "phone" || /(^|_)(phone|mobile|cell|telephone)(_|$)/.test(column.normalizedHeader || "");
+    return (
+      column.inferredType === "phone" ||
+      /(^|_)(phone|mobile|cell|telephone)(_|$)/.test(column.normalizedHeader || "")
+    );
   }
 
   function isUrl(value) {
@@ -761,7 +928,9 @@
 
   function isNumericLike(value) {
     const text = String(value).trim();
-    if (!text || /^0\d+/.test(text)) return false;
+    if (!text || /^0\d+/.test(text)) {
+      return false;
+    }
     const normalized = text.replace(/[$,\s]/g, "").replace(/%$/, "");
     return /^-?\d+(\.\d+)?$/.test(normalized);
   }
@@ -769,13 +938,17 @@
   function normalizeNumber(value) {
     const text = String(value).trim();
     const normalized = text.replace(/[$,\s]/g, "");
-    if (/^-?\d+(\.\d+)?%?$/.test(normalized)) return normalized;
+    if (/^-?\d+(\.\d+)?%?$/.test(normalized)) {
+      return normalized;
+    }
     return "";
   }
 
   function parseDate(value) {
     const text = String(value).trim();
-    if (!text || /^\d+$/.test(text)) return null;
+    if (!text || /^\d+$/.test(text)) {
+      return null;
+    }
     const iso = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
     const slash = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/);
     const long = text.match(/^[A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4}$/);
@@ -790,13 +963,17 @@
       date = new Date(text);
     }
 
-    if (!date || Number.isNaN(date.getTime())) return null;
+    if (!date || Number.isNaN(date.getTime())) {
+      return null;
+    }
     return date;
   }
 
   function formatDateIso(value) {
     const date = parseDate(value);
-    if (!date) return "";
+    if (!date) {
+      return "";
+    }
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -819,7 +996,9 @@
     const groups = {};
     for (const item of items) {
       const key = keyFn(item);
-      if (!groups[key]) groups[key] = [];
+      if (!groups[key]) {
+        groups[key] = [];
+      }
       groups[key].push(item);
     }
     return groups;
@@ -831,7 +1010,9 @@
     const tokenUnion = new Set([...tokensA, ...tokensB]);
     let tokenIntersection = 0;
     for (const token of tokensA) {
-      if (tokensB.has(token)) tokenIntersection += 1;
+      if (tokensB.has(token)) {
+        tokenIntersection += 1;
+      }
     }
     const tokenScore = tokenUnion.size ? tokenIntersection / tokenUnion.size : 0;
     const trigramScore = jaccard(trigrams(a), trigrams(b));
@@ -851,7 +1032,9 @@
     const union = new Set([...a, ...b]);
     let intersection = 0;
     for (const item of a) {
-      if (b.has(item)) intersection += 1;
+      if (b.has(item)) {
+        intersection += 1;
+      }
     }
     return union.size ? intersection / union.size : 0;
   }
@@ -873,9 +1056,19 @@
   }
 
   function inferDerivedSource(fieldKey, sourceIndex) {
-    const fullName = firstExistingSource(sourceIndex, ["full_name", "name", "contact_name", "customer_name"]);
+    const fullName = firstExistingSource(sourceIndex, [
+      "full_name",
+      "name",
+      "contact_name",
+      "customer_name",
+    ]);
     const firstName = firstExistingSource(sourceIndex, ["first_name", "firstname", "given_name"]);
-    const lastName = firstExistingSource(sourceIndex, ["last_name", "lastname", "surname", "family_name"]);
+    const lastName = firstExistingSource(sourceIndex, [
+      "last_name",
+      "lastname",
+      "surname",
+      "family_name",
+    ]);
     if ((fieldKey === "firstname" || fieldKey === "FirstName") && fullName) {
       return { source: "__first_from_full_name", derivedFrom: [fullName] };
     }
@@ -898,19 +1091,32 @@
       return splitFullName(index == null ? "" : row[index])[1];
     }
     if (item.source === "__full_from_parts") {
-      return item.derivedFrom.map((source) => {
-        const index = sourceIndex[source];
-        return index == null ? "" : row[index] || "";
-      }).filter(Boolean).join(" ").trim();
+      return item.derivedFrom
+        .map((source) => {
+          const index = sourceIndex[source];
+          return index == null ? "" : row[index] || "";
+        })
+        .filter(Boolean)
+        .join(" ")
+        .trim();
     }
-    if (!item.source || sourceIndex[item.source] == null) return "";
+    if (!item.source || sourceIndex[item.source] == null) {
+      return "";
+    }
     return row[sourceIndex[item.source]] || "";
   }
 
   function splitFullName(value) {
-    const parts = String(value || "").trim().split(/\s+/).filter(Boolean);
-    if (!parts.length) return ["", ""];
-    if (parts.length === 1) return [parts[0], ""];
+    const parts = String(value || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (!parts.length) {
+      return ["", ""];
+    }
+    if (parts.length === 1) {
+      return [parts[0], ""];
+    }
     return [parts.slice(0, -1).join(" "), parts[parts.length - 1]];
   }
 
@@ -920,9 +1126,13 @@
 
   function firstExistingIndex(headerIndex, names) {
     for (const name of names) {
-      if (headerIndex[name] != null) return headerIndex[name];
+      if (headerIndex[name] != null) {
+        return headerIndex[name];
+      }
       const normalized = normalizeHeader(name);
-      if (headerIndex[normalized] != null) return headerIndex[normalized];
+      if (headerIndex[normalized] != null) {
+        return headerIndex[normalized];
+      }
     }
     return null;
   }

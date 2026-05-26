@@ -11,13 +11,13 @@
 
 ## Import Blockers
 
-| Severity | Issue | Why It Matters |
-| --- | --- | --- |
-| High | 2 duplicate email groups | HubSpot uses email as the primary contact identity. Duplicate rows can overwrite or fork records. |
-| High | 3 invalid or missing emails | Invalid emails fail validation and missing emails weaken dedupe. |
-| Medium | 4 phone values need normalization | Mixed phone formats make calling, dedupe, and enrichment inconsistent. |
-| Medium | 2 rows are missing company values | Missing company data reduces routing and account matching quality. |
-| Low | 3 unmapped columns | Extra columns need explicit handling before import. |
+| Severity | Issue                             | Why It Matters                                                                                    |
+| -------- | --------------------------------- | ------------------------------------------------------------------------------------------------- |
+| High     | 2 duplicate email groups          | HubSpot uses email as the primary contact identity. Duplicate rows can overwrite or fork records. |
+| High     | 3 invalid or missing emails       | Invalid emails fail validation and missing emails weaken dedupe.                                  |
+| Medium   | 4 phone values need normalization | Mixed phone formats make calling, dedupe, and enrichment inconsistent.                            |
+| Medium   | 2 rows are missing company values | Missing company data reduces routing and account matching quality.                                |
+| Low      | 3 unmapped columns                | Extra columns need explicit handling before import.                                               |
 
 ## Cleanup Actions
 
@@ -31,13 +31,13 @@
 
 ## Recommended Field Mapping
 
-| Source Column | HubSpot Field | Action |
-| --- | --- | --- |
-| `email` | `Email` | Import after validation. |
-| `first_name` | `First Name` | Import. |
-| `last_name` | `Last Name` | Import. |
-| `company` | `Company Name` | Import after filling blanks. |
-| `phone` | `Phone Number` | Import after normalization. |
+| Source Column | HubSpot Field                  | Action                                     |
+| ------------- | ------------------------------ | ------------------------------------------ |
+| `email`       | `Email`                        | Import after validation.                   |
+| `first_name`  | `First Name`                   | Import.                                    |
+| `last_name`   | `Last Name`                    | Import.                                    |
+| `company`     | `Company Name`                 | Import after filling blanks.               |
+| `phone`       | `Phone Number`                 | Import after normalization.                |
 | `lead_source` | `Original Source Drill-Down 1` | Confirm exact HubSpot field before upload. |
 
 ## Before Upload

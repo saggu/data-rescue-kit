@@ -63,7 +63,10 @@ form.addEventListener("submit", (event) => {
   const inquiry = buildInquiry();
   const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(inquiry.subject)}&body=${encodeURIComponent(inquiry.body)}`;
   window.location.href = mailtoUrl;
-  setStatus(`Email draft opened for ${CONTACT_EMAIL}. If nothing opened, use Copy inquiry.`, "success");
+  setStatus(
+    `Email draft opened for ${CONTACT_EMAIL}. If nothing opened, use Copy inquiry.`,
+    "success",
+  );
 });
 
 copyButton.addEventListener("click", async () => {
