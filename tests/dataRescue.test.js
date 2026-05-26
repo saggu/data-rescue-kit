@@ -42,6 +42,61 @@ const crm = rescue.analyzeCrmReadiness(exported, "hubspot");
 assert.equal(crm.presetLabel, "HubSpot contacts");
 assert.ok(crm.score > 0);
 
+const workflowConfig = {
+  workflowId: "monthly-webinar-hubspot",
+  workflowName: "Monthly Webinar Leads to HubSpot",
+  version: "1.0.0",
+  sourceFormat: "Monthly webinar export",
+  crmPreset: "hubspot",
+  crmTarget: "HubSpot contacts",
+  includedFixesUntil: "2026-06-15",
+  expectedColumns: [
+    "Full Name",
+    "Work Email",
+    "Mobile Phone",
+    "Company Name",
+    "Signup Date",
+    "Spend",
+  ],
+  requiredColumns: ["Work Email", "Company Name"],
+  rules: {
+    normalizeHeaders: true,
+    trimCells: true,
+    lowerEmail: true,
+    dropDuplicateRows: true,
+  },
+};
+
+const normalizedWorkflow = rescue.normalizeWorkflowConfig(workflowConfig);
+assert.equal(normalizedWorkflow.valid, true);
+assert.equal(normalizedWorkflow.crmPreset, "hubspot");
+assert.equal(normalizedWorkflow.rules.lowerEmail, true);
+
+const workflow = rescue.evaluateWorkflowContract(table, workflowConfig, { today: "2026-06-01" });
+assert.equal(workflow.status, "matched");
+assert.equal(workflow.matchedColumns.length, workflowConfig.expectedColumns.length);
+assert.equal(workflow.extraColumns.length, 0);
+assert.equal(workflow.support.status, "active");
+
+const changedTable = rescue.parseDelimited(`${input}\n`, ",");
+changedTable.headers.push("UTM Campaign");
+changedTable.rows = changedTable.rows.map((row) => row.concat("spring-webinar"));
+const changedWorkflow = rescue.evaluateWorkflowContract(changedTable, workflowConfig, {
+  today: "2026-06-01",
+});
+assert.equal(changedWorkflow.status, "needs_update");
+assert.deepEqual(changedWorkflow.extraColumns, ["UTM Campaign"]);
+assert.ok(changedWorkflow.issues.some((issue) => issue.stage === "workflow_scope"));
+
+const missingTable = rescue.parseDelimited(input);
+missingTable.headers = missingTable.headers.filter((header) => header !== "Work Email");
+missingTable.rows = missingTable.rows.map((row) => row.filter((_, index) => index !== 1));
+const missingWorkflow = rescue.evaluateWorkflowContract(missingTable, workflowConfig, {
+  today: "2026-06-01",
+});
+assert.equal(missingWorkflow.status, "blocked");
+assert.deepEqual(missingWorkflow.missingRequiredColumns, ["Work Email"]);
+
 for (const preset of ["salesforce", "airtable"]) {
   const presetExport = rescue.applyCrmPreset(cleaned, preset);
   const presetCrm = rescue.analyzeCrmReadiness(presetExport, preset);
@@ -54,12 +109,17 @@ const csv = rescue.toDelimited(cleaned.headers, cleaned.rows, ",");
 assert.match(csv, /signup_date/);
 assert.match(csv, /jordan@acme.com/);
 
-const report = rescue.buildMarkdownReport(table, analysis, cleaned, { exported, crm });
+const report = rescue.buildMarkdownReport(table, analysis, cleaned, { exported, crm, workflow });
 assert.match(report, /CRM Import Rescue Report/);
 assert.match(report, /Exact duplicate rows: 1/);
 assert.match(report, /CRM Field Mapping/);
+assert.match(report, /Workflow Scope/);
 
-const issueExport = rescue.buildIssueExport(table, analysis, { exported, crm });
+const issueExport = rescue.buildIssueExport(changedTable, analysis, {
+  exported,
+  crm,
+  workflow: changedWorkflow,
+});
 assert.deepEqual(issueExport.headers, [
   "severity",
   "stage",
@@ -71,6 +131,7 @@ assert.deepEqual(issueExport.headers, [
 ]);
 assert.ok(issueExport.rows.some((row) => row.includes("Exact duplicate row")));
 assert.ok(issueExport.rows.some((row) => row.includes("Duplicate email group across rows 2; 3")));
+assert.ok(issueExport.rows.some((row) => row.includes("workflow_scope")));
 const issueCsv = rescue.toDelimited(issueExport.headers, issueExport.rows, ",");
 assert.match(issueCsv, /suggested_fix/);
 assert.match(issueCsv, /crm_export/);

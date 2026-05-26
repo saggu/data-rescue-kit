@@ -1,0 +1,37 @@
+{
+  "workflowId": "sample-webinar-leads-hubspot",
+  "workflowName": "Sample Webinar Leads to HubSpot",
+  "version": "1.0.0",
+  "sourceFormat": "Monthly Webinar Export",
+  "crmPreset": "hubspot",
+  "crmTarget": "HubSpot contacts",
+  "includedFixesUntil": "2026-06-09",
+  "allowExtraColumns": false,
+  "expectedColumns": [
+    "Contact ID",
+    "Full Name",
+    "Work Email",
+    "Mobile Phone",
+    "Company Name",
+    "Job Title",
+    "Lead Source",
+    "CRM Status",
+    "Sales Owner",
+    "Last Contacted",
+    "City",
+    "State",
+    "Country",
+    "Notes"
+  ],
+  "requiredColumns": ["Work Email", "Company Name"],
+  "rules": {
+    "normalizeHeaders": true,
+    "trimCells": true,
+    "normalizeEmpty": true,
+    "lowerEmail": true,
+    "normalizePhones": true,
+    "normalizeDates": true,
+    "normalizeNumbers": true,
+    "dropDuplicateRows": true
+  }
+}

@@ -8,6 +8,16 @@
   "use strict";
 
   const EMPTY_TOKENS = new Set(["", "na", "n/a", "none", "null", "nil", "-", "--", "unknown"]);
+  const CLEANING_RULE_KEYS = new Set([
+    "normalizeHeaders",
+    "trimCells",
+    "normalizeEmpty",
+    "lowerEmail",
+    "normalizeDates",
+    "normalizeNumbers",
+    "normalizePhones",
+    "dropDuplicateRows",
+  ]);
   const CRM_PRESETS = {
     hubspot: {
       label: "HubSpot contacts",
@@ -620,10 +630,203 @@
     };
   }
 
+  function normalizeWorkflowConfig(input) {
+    let raw = input || {};
+    if (typeof input === "string") {
+      try {
+        raw = JSON.parse(input);
+      } catch (error) {
+        return {
+          valid: false,
+          errors: ["Workflow config must be valid JSON."],
+          rawInput: input,
+        };
+      }
+    }
+
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      return {
+        valid: false,
+        errors: ["Workflow config must be a JSON object."],
+        rawInput: input,
+      };
+    }
+
+    const errors = [];
+    const expectedColumns = normalizeStringList(raw.expectedColumns);
+    const requiredColumns = normalizeStringList(raw.requiredColumns);
+    const rules = normalizeWorkflowRules(raw.rules || {});
+    const crmPreset = normalizeCrmPreset(raw.crmPreset || raw.preset || raw.crmTarget);
+    const includedFixesUntil = raw.includedFixesUntil || raw.includedUntil || "";
+
+    if (!expectedColumns.length) {
+      errors.push("Workflow config needs at least one expectedColumns entry.");
+    }
+
+    for (const column of requiredColumns) {
+      if (!expectedColumns.map(normalizeHeader).includes(normalizeHeader(column))) {
+        errors.push(`${column} is required but is not listed in expectedColumns.`);
+      }
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors,
+      workflowId: stringOrDefault(raw.workflowId || raw.id, "custom-workflow"),
+      workflowName: stringOrDefault(raw.workflowName || raw.name, "Custom CRM cleanup workflow"),
+      version: stringOrDefault(raw.version, "1.0.0"),
+      sourceFormat: stringOrDefault(raw.sourceFormat, "Recurring CSV export"),
+      crmTarget: stringOrDefault(raw.crmTarget, CRM_PRESETS[crmPreset].label),
+      crmPreset,
+      includedFixesUntil: String(includedFixesUntil || "").trim(),
+      allowExtraColumns: Boolean(raw.allowExtraColumns),
+      expectedColumns,
+      requiredColumns,
+      rules,
+    };
+  }
+
+  function evaluateWorkflowContract(table, workflowConfig, options) {
+    const config = normalizeWorkflowConfig(workflowConfig);
+    const today = options && options.today ? options.today : null;
+    if (!config.valid) {
+      return {
+        enabled: true,
+        status: "invalid",
+        statusLabel: "Invalid workflow config",
+        config,
+        support: buildSupportWindow(config.includedFixesUntil, today),
+        matchedColumns: [],
+        missingExpectedColumns: [],
+        missingRequiredColumns: [],
+        extraColumns: [],
+        duplicateSourceColumns: [],
+        issues: config.errors.map((message) => ({
+          severity: "high",
+          stage: "workflow_scope",
+          issue: message,
+          suggestedFix: "Fix the workflow JSON before using it for a paid reusable workflow.",
+        })),
+      };
+    }
+
+    const headers = table && Array.isArray(table.headers) ? table.headers : [];
+    const sourceGroups = groupBy(
+      headers.map((header, index) => ({
+        header,
+        index,
+        normalized: normalizeHeader(header),
+      })),
+      (item) => item.normalized,
+    );
+    const expected = config.expectedColumns.map((column) => ({
+      column,
+      normalized: normalizeHeader(column),
+      matches: sourceGroups[normalizeHeader(column)] || [],
+    }));
+    const expectedKeys = new Set(expected.map((item) => item.normalized));
+    const missingExpectedColumns = expected
+      .filter((item) => !item.matches.length)
+      .map((item) => item.column);
+    const missingRequiredColumns = config.requiredColumns.filter(
+      (column) => !(sourceGroups[normalizeHeader(column)] || []).length,
+    );
+    const matchedColumns = expected
+      .filter((item) => item.matches.length === 1)
+      .map((item) => ({
+        expected: item.column,
+        actual: item.matches[0].header,
+        index: item.matches[0].index,
+      }));
+    const ambiguousColumns = expected
+      .filter((item) => item.matches.length > 1)
+      .map((item) => ({
+        expected: item.column,
+        actual: item.matches.map((match) => match.header),
+      }));
+    const extraColumns = headers.filter((header) => !expectedKeys.has(normalizeHeader(header)));
+    const duplicateSourceColumns = Object.values(sourceGroups)
+      .filter((items) => items.length > 1)
+      .map((items) => ({
+        normalized: items[0].normalized,
+        columns: items.map((item) => item.header),
+      }));
+
+    const issues = [];
+    for (const column of missingRequiredColumns) {
+      issues.push({
+        severity: "high",
+        stage: "workflow_scope",
+        field: column,
+        issue: "Required workflow column is missing",
+        suggestedFix: "Use the contracted source export or scope a paid workflow update.",
+      });
+    }
+    for (const column of missingExpectedColumns.filter(
+      (column) => !missingRequiredColumns.map(normalizeHeader).includes(normalizeHeader(column)),
+    )) {
+      issues.push({
+        severity: "high",
+        stage: "workflow_scope",
+        field: column,
+        issue: "Expected workflow column is missing",
+        suggestedFix: "Use the contracted source export or scope a paid workflow update.",
+      });
+    }
+    for (const item of ambiguousColumns) {
+      issues.push({
+        severity: "high",
+        stage: "workflow_scope",
+        field: item.expected,
+        value: item.actual.join(", "),
+        issue: "Workflow column matches multiple source columns",
+        suggestedFix: "Rename duplicate columns before running the reusable workflow.",
+      });
+    }
+    if (extraColumns.length && !config.allowExtraColumns) {
+      issues.push({
+        severity: "medium",
+        stage: "workflow_scope",
+        field: "columns",
+        value: extraColumns.join(", "),
+        issue: `${extraColumns.length} source column${plural(extraColumns.length)} ${extraColumns.length === 1 ? "is" : "are"} outside the contracted workflow format`,
+        suggestedFix:
+          "Confirm whether these columns can be ignored or scope a paid mapping update.",
+      });
+    }
+
+    let status = "matched";
+    let statusLabel = "Workflow matched";
+    if (missingRequiredColumns.length || missingExpectedColumns.length || ambiguousColumns.length) {
+      status = "blocked";
+      statusLabel = "Workflow blocked";
+    } else if (extraColumns.length && !config.allowExtraColumns) {
+      status = "needs_update";
+      statusLabel = "Workflow needs update";
+    }
+
+    return {
+      enabled: true,
+      status,
+      statusLabel,
+      config,
+      support: buildSupportWindow(config.includedFixesUntil, today),
+      matchedColumns,
+      missingExpectedColumns,
+      missingRequiredColumns,
+      extraColumns,
+      duplicateSourceColumns,
+      issues,
+      rowCount: table && Array.isArray(table.rows) ? table.rows.length : 0,
+      columnCount: headers.length,
+    };
+  }
+
   function buildMarkdownReport(table, analysis, cleaned, options) {
     const opts = options || {};
     const crm = opts.crm || null;
     const exported = opts.exported || null;
+    const workflow = opts.workflow || null;
     const lines = [];
     lines.push("# CRM Import Rescue Report");
     lines.push("");
@@ -644,7 +847,35 @@
         `- Import export size: ${exported.rows.length} rows x ${exported.headers.length} columns`,
       );
     }
+    if (workflow) {
+      lines.push(
+        `- Workflow scope: ${workflow.statusLabel} (${workflow.config.workflowId} v${workflow.config.version})`,
+      );
+    }
     lines.push("");
+    if (workflow) {
+      lines.push("## Workflow Scope");
+      lines.push("");
+      lines.push(`- Workflow: ${workflow.config.workflowName}`);
+      lines.push(`- Source format: ${workflow.config.sourceFormat}`);
+      lines.push(`- CRM target: ${workflow.config.crmTarget}`);
+      lines.push(`- Status: ${workflow.statusLabel}`);
+      lines.push(`- Expected columns matched: ${workflow.matchedColumns.length}`);
+      lines.push(`- Missing expected columns: ${workflow.missingExpectedColumns.length || "none"}`);
+      lines.push(
+        `- Extra columns: ${workflow.extraColumns.length ? workflow.extraColumns.join(", ") : "none"}`,
+      );
+      if (workflow.support && workflow.support.status !== "not_set") {
+        lines.push(`- Included fixes: ${workflow.support.label}`);
+      }
+      if (workflow.issues.length) {
+        lines.push("");
+        for (const issue of workflow.issues) {
+          lines.push(`- ${issue.severity.toUpperCase()}: ${issue.issue}`);
+        }
+      }
+      lines.push("");
+    }
     lines.push("## Cleaning Applied");
     lines.push("");
     for (const [key, value] of Object.entries(cleaned.changes)) {
@@ -720,6 +951,7 @@
     const opts = options || {};
     const crm = opts.crm || null;
     const exported = opts.exported || null;
+    const workflow = opts.workflow || null;
     const headers = ["severity", "stage", "row", "field", "value", "issue", "suggested_fix"];
     const rows = [];
     const addIssue = (issue) => {
@@ -773,6 +1005,11 @@
     }
 
     addColumnIssues(table, analysis, addIssue);
+    if (workflow) {
+      for (const issue of workflow.issues || []) {
+        addIssue(issue);
+      }
+    }
     if (crm && exported) {
       addCrmIssues(crm, exported, addIssue);
     }
@@ -1065,6 +1302,90 @@
       .replace(/^_+|_+$/g, "")
       .replace(/_+/g, "_");
     return base || "column";
+  }
+
+  function normalizeStringList(value) {
+    return Array.isArray(value)
+      ? value.map((item) => String(item || "").trim()).filter(Boolean)
+      : [];
+  }
+
+  function normalizeWorkflowRules(rules) {
+    const normalized = {};
+    if (!rules || typeof rules !== "object" || Array.isArray(rules)) {
+      return normalized;
+    }
+    for (const [key, value] of Object.entries(rules)) {
+      if (CLEANING_RULE_KEYS.has(key) && typeof value === "boolean") {
+        normalized[key] = value;
+      }
+    }
+    return normalized;
+  }
+
+  function normalizeCrmPreset(value) {
+    const key = normalizeHeader(value);
+    if (CRM_PRESETS[key]) {
+      return key;
+    }
+    const match = Object.entries(CRM_PRESETS).find((entry) => {
+      const [presetKey, preset] = entry;
+      return (
+        normalizeHeader(presetKey) === key ||
+        normalizeHeader(preset.label) === key ||
+        preset.fields.some((field) => normalizeHeader(field.label) === key)
+      );
+    });
+    return match ? match[0] : "hubspot";
+  }
+
+  function stringOrDefault(value, fallback) {
+    const text = String(value || "").trim();
+    return text || fallback;
+  }
+
+  function buildSupportWindow(dateValue, todayValue) {
+    const iso = String(dateValue || "").trim();
+    if (!iso) {
+      return { status: "not_set", label: "No included-fix window set." };
+    }
+    const until = parseIsoDateOnly(iso);
+    if (!until) {
+      return { status: "invalid", label: `Invalid included-fix date: ${iso}` };
+    }
+    const today = parseIsoDateOnly(todayValue) || new Date();
+    const todayUtc = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    const untilUtc = Date.UTC(until.getFullYear(), until.getMonth(), until.getDate());
+    const daysRemaining = Math.ceil((untilUtc - todayUtc) / 86400000);
+    if (daysRemaining < 0) {
+      return {
+        status: "ended",
+        daysRemaining,
+        includedFixesUntil: iso,
+        label: `Ended on ${iso}.`,
+      };
+    }
+    return {
+      status: "active",
+      daysRemaining,
+      includedFixesUntil: iso,
+      label:
+        daysRemaining === 0
+          ? `Ends today (${iso}).`
+          : `${daysRemaining} day${plural(daysRemaining)} remaining, through ${iso}.`,
+    };
+  }
+
+  function parseIsoDateOnly(value) {
+    if (!value) {
+      return null;
+    }
+    const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+      return null;
+    }
+    const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 
   function makeUniqueHeaders(headers) {
@@ -1366,6 +1687,8 @@
     cleanTable,
     applyCrmPreset,
     analyzeCrmReadiness,
+    normalizeWorkflowConfig,
+    evaluateWorkflowContract,
     buildMarkdownReport,
     buildIssueExport,
     normalizeHeader,

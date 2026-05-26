@@ -20,6 +20,7 @@ This is no longer positioned as a generic data cleaning tool. The wedge is speci
 - Exports an import-ready CSV for the selected CRM.
 - Exports a row-level issue CSV with severity, stage, row, field, value, and suggested fix.
 - Generates a Markdown report that can be sent to a prospect or client.
+- Loads reusable workflow JSON contracts for `$500+` recurring cleanup scope.
 - Runs fully in the browser. No upload server and no API key.
 
 ## Pages
@@ -33,6 +34,7 @@ This is no longer positioned as a generic data cleaning tool. The wedge is speci
 The app includes a dirty CRM sample dataset at `samples/crm_contacts_dirty.csv`.
 The sample buyer-facing report is at `samples/crm-import-rescue-sample-report.md`.
 The sample cleaned import and issue exports are at `samples/crm-import-rescue-cleaned-hubspot.csv` and `samples/crm-import-rescue-issues.csv`.
+The sample reusable workflow contract is at `samples/sample-workflow-config-hubspot.json`.
 
 The intake email destination, lead endpoint, and optional analytics endpoint are configured in `src/siteConfig.js`.
 The default lead endpoint uses FormSubmit AJAX, which requires the owner email to confirm the first submission.
@@ -88,6 +90,7 @@ Reusable workflow scope:
 - Includes reusable script/workflow, cleaned-output template, issue-report template, handoff walkthrough, and 14 days of small fixes.
 - Lasts as long as the source file structure and cleanup rules stay the same.
 - New columns, new CRM mappings, or new cleanup rules are scoped as a paid change request or managed monthly cleanup.
+- The tool tracks this with a versioned JSON workflow contract: expected columns, required columns, CRM target, cleanup rules, and included-fix window.
 
 Good fit:
 

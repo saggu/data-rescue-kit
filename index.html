@@ -263,6 +263,15 @@
             </p>
           </details>
           <details>
+            <summary>How is reusable workflow scope tracked by the code?</summary>
+            <p>
+              Each reusable workflow has a versioned JSON contract with expected columns, required
+              columns, CRM target, cleanup rules, and included-fix window. The tool compares each
+              new CSV against that contract before export and flags changed schemas as matched,
+              blocked, or needing a paid update.
+            </p>
+          </details>
+          <details>
             <summary>Can an agency use this for client work?</summary>
             <p>
               Yes. The service is a good fit for CRM consultants, RevOps teams, and agencies that

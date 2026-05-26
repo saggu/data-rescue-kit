@@ -128,6 +128,7 @@ th {
 
 .brand-row p,
 .sell-panel p,
+.workflow-panel p,
 .upload-panel p {
   color: #bfd0cb;
   line-height: 1.45;
@@ -162,6 +163,7 @@ th {
 .upload-panel,
 .control-panel,
 .export-panel,
+.workflow-panel,
 .sell-panel {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
@@ -182,13 +184,15 @@ th {
 .upload-panel label,
 .control-panel h2,
 .export-panel h2,
+.workflow-panel h2,
 .sell-panel h2 {
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
 }
 
-.upload-panel input {
+.upload-panel input,
+.workflow-panel input {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
@@ -217,13 +221,15 @@ th {
   padding: 0 12px;
 }
 
-.upload-panel p {
+.upload-panel p,
+.workflow-panel p {
   min-height: 24px;
   margin: 0;
   color: #d7e2de;
 }
 
-.upload-panel p.is-error {
+.upload-panel p.is-error,
+.workflow-panel p.is-error {
   color: #ffb4a8;
 }
 
@@ -518,6 +524,67 @@ th {
 
 .crm-facts strong {
   color: var(--ink);
+}
+
+.workflow-scope {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+}
+
+.workflow-status {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  padding: 16px;
+}
+
+.workflow-status span {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.workflow-status strong {
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.workflow-status.matched span {
+  color: var(--green);
+}
+
+.workflow-status.needs_update span {
+  color: var(--amber);
+}
+
+.workflow-status.blocked span,
+.workflow-status.invalid span {
+  color: var(--red);
+}
+
+.workflow-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.workflow-facts span {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+  padding: 10px 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.workflow-facts strong {
+  color: var(--ink);
+  font-size: 14px;
 }
 
 .preview-title-row {
@@ -1222,7 +1289,8 @@ th {
   }
 
   .metrics-grid,
-  .split-layout {
+  .split-layout,
+  .workflow-facts {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -1267,7 +1335,8 @@ th {
   .split-layout,
   .duplicate-grid,
   .crm-readiness,
-  .crm-facts {
+  .crm-facts,
+  .workflow-facts {
     grid-template-columns: 1fr;
   }
 

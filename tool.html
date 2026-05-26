@@ -61,6 +61,25 @@
           >
         </section>
 
+        <section class="workflow-panel">
+          <h2>Workflow scope</h2>
+          <label class="select-label" for="workflowInput">Reusable workflow JSON</label>
+          <input id="workflowInput" type="file" accept=".json,application/json" />
+          <div class="button-row">
+            <button
+              id="loadSampleWorkflow"
+              type="button"
+              data-analytics="tool_load_sample_workflow"
+            >
+              Load sample workflow
+            </button>
+            <button id="clearWorkflow" class="secondary-action" type="button">
+              Clear workflow
+            </button>
+          </div>
+          <p id="workflowStatusLine">No workflow config loaded.</p>
+        </section>
+
         <section class="export-panel">
           <h2>CRM target</h2>
           <label class="select-label" for="presetSelect">Import format</label>
@@ -161,6 +180,13 @@
               <h2>CRM import blockers</h2>
             </div>
             <div id="crmReadiness" class="crm-readiness"></div>
+          </section>
+
+          <section id="workflowSection" class="section-panel" hidden>
+            <div class="section-title">
+              <h2>Workflow contract</h2>
+            </div>
+            <div id="workflowScope" class="workflow-scope"></div>
           </section>
 
           <section class="section-panel">

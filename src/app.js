@@ -14,12 +14,52 @@
 009,Taylor Brooks,Info@OceanView.example,,Oceanview Realty,Agent,Import,cold,,,"Venice ",CA,USA,
 010,Riley Patel,team@harborfit.com,(310) 555-0124,Harbor Fitness,GM,Event,Nurture,Lee,2026-04-01,Marina del Rey,CA,USA,`;
 
+  const SAMPLE_WORKFLOW = {
+    workflowId: "sample-webinar-leads-hubspot",
+    workflowName: "Sample Webinar Leads to HubSpot",
+    version: "1.0.0",
+    sourceFormat: "Monthly Webinar Export",
+    crmPreset: "hubspot",
+    crmTarget: "HubSpot contacts",
+    includedFixesUntil: "2026-06-09",
+    allowExtraColumns: false,
+    expectedColumns: [
+      "Contact ID",
+      "Full Name",
+      "Work Email",
+      "Mobile Phone",
+      "Company Name",
+      "Job Title",
+      "Lead Source",
+      "CRM Status",
+      "Sales Owner",
+      "Last Contacted",
+      "City",
+      "State",
+      "Country",
+      "Notes",
+    ],
+    requiredColumns: ["Work Email", "Company Name"],
+    rules: {
+      normalizeHeaders: true,
+      trimCells: true,
+      normalizeEmpty: true,
+      lowerEmail: true,
+      normalizePhones: true,
+      normalizeDates: true,
+      normalizeNumbers: true,
+      dropDuplicateRows: true,
+    },
+  };
+
   const state = {
     table: null,
     analysis: null,
     cleaned: null,
     exported: null,
     crm: null,
+    workflowConfig: null,
+    workflow: null,
     preset: "hubspot",
     fileName: "sample-crm-contacts.csv",
     activePreview: "clean",
@@ -35,6 +75,10 @@
       "dropZone",
       "fileInput",
       "loadSample",
+      "workflowInput",
+      "loadSampleWorkflow",
+      "clearWorkflow",
+      "workflowStatusLine",
       "downloadCsv",
       "downloadReport",
       "downloadIssues",
@@ -49,6 +93,8 @@
       "duplicatePanel",
       "crmReadiness",
       "fieldMapping",
+      "workflowSection",
+      "workflowScope",
       "previewTable",
       "previewTitle",
       "delimiterBadge",
@@ -68,9 +114,12 @@
     });
 
     els.fileInput.addEventListener("change", handleFileInput);
+    els.workflowInput.addEventListener("change", handleWorkflowInput);
     els.loadSample.addEventListener("click", () =>
       analyzeText(SAMPLE_DATA, "sample-crm-contacts.csv"),
     );
+    els.loadSampleWorkflow.addEventListener("click", () => setWorkflowConfig(SAMPLE_WORKFLOW));
+    els.clearWorkflow.addEventListener("click", clearWorkflow);
     els.downloadCsv.addEventListener("click", downloadCleanCsv);
     els.downloadReport.addEventListener("click", downloadReport);
     els.downloadIssues.addEventListener("click", downloadIssueCsv);
@@ -127,13 +176,17 @@
       const cleaned = rescue.cleanTable(table, analysis, collectOptions());
       const exported = rescue.applyCrmPreset(cleaned, state.preset);
       const crm = rescue.analyzeCrmReadiness(exported, state.preset);
+      const workflow = state.workflowConfig
+        ? rescue.evaluateWorkflowContract(table, state.workflowConfig)
+        : null;
       state.table = table;
       state.analysis = analysis;
       state.cleaned = cleaned;
       state.exported = exported;
       state.crm = crm;
+      state.workflow = workflow;
       state.fileName = fileName || "data.csv";
-      setStatus(`${state.fileName} mapped for ${exported.presetLabel}.`);
+      setStatus(fileStatusMessage(exported, workflow));
       render();
     } catch (error) {
       setStatus(error.message || "The file could not be analyzed.", true);
@@ -145,7 +198,7 @@
     document.querySelectorAll("[data-option]").forEach((input) => {
       options[input.dataset.option] = input.checked;
     });
-    return options;
+    return Object.assign(options, (state.workflowConfig && state.workflowConfig.rules) || {});
   }
 
   function rerunClean() {
@@ -155,6 +208,10 @@
     state.cleaned = rescue.cleanTable(state.table, state.analysis, collectOptions());
     state.exported = rescue.applyCrmPreset(state.cleaned, state.preset);
     state.crm = rescue.analyzeCrmReadiness(state.exported, state.preset);
+    state.workflow = state.workflowConfig
+      ? rescue.evaluateWorkflowContract(state.table, state.workflowConfig)
+      : null;
+    setStatus(fileStatusMessage(state.exported, state.workflow));
     render();
   }
 
@@ -176,12 +233,65 @@
 
     renderIssues(analysis.issues);
     renderCrmReadiness(state.crm);
+    renderWorkflowScope(state.workflow);
     renderFieldMapping(state.exported);
     renderColumnProfile(analysis.columns);
     renderDuplicates(analysis);
     renderChanges(state.cleaned.changes);
     renderPreview();
     updateButtons();
+  }
+
+  function handleWorkflowInput(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        setWorkflowConfig(String(reader.result || ""));
+      } catch (error) {
+        setWorkflowStatus(error.message || "Could not load workflow config.", true);
+      }
+    };
+    reader.onerror = () => setWorkflowStatus("Could not read that workflow config.", true);
+    reader.readAsText(file);
+  }
+
+  function setWorkflowConfig(input) {
+    const config = rescue.normalizeWorkflowConfig(input);
+    if (!config.valid) {
+      throw new Error(config.errors.join(" "));
+    }
+    state.workflowConfig = config;
+    state.preset = config.crmPreset;
+    els.presetSelect.value = config.crmPreset;
+    applyWorkflowControls(config);
+    setWorkflowStatus(`${config.workflowName} v${config.version} loaded.`);
+    rerunClean();
+  }
+
+  function clearWorkflow() {
+    state.workflowConfig = null;
+    state.workflow = null;
+    els.workflowInput.value = "";
+    document.querySelectorAll("[data-option]").forEach((input) => {
+      input.disabled = false;
+    });
+    els.presetSelect.disabled = false;
+    setWorkflowStatus("No workflow config loaded.");
+    rerunClean();
+  }
+
+  function applyWorkflowControls(config) {
+    document.querySelectorAll("[data-option]").forEach((input) => {
+      if (Object.prototype.hasOwnProperty.call(config.rules, input.dataset.option)) {
+        input.checked = config.rules[input.dataset.option];
+      }
+      input.disabled = true;
+    });
+    els.presetSelect.disabled = true;
   }
 
   function renderIssues(issues) {
@@ -248,6 +358,45 @@
         <span>Invalid phones: <strong>${number(crm.invalidPhones.length)}</strong></span>
         <span>Duplicate email rows: <strong>${escapeHtml(duplicateRows)}</strong></span>
       </div>`;
+  }
+
+  function renderWorkflowScope(workflow) {
+    if (!workflow) {
+      els.workflowSection.hidden = true;
+      els.workflowScope.innerHTML = "";
+      return;
+    }
+
+    els.workflowSection.hidden = false;
+    const issueHtml = workflow.issues.length
+      ? workflow.issues
+          .map(
+            (issue) =>
+              `<li><span class="severity ${issue.severity}">${issue.severity}</span>${escapeHtml(issue.issue)}${issue.field ? `<span>${escapeHtml(issue.field)}</span>` : ""}</li>`,
+          )
+          .join("")
+      : '<li class="quiet">Source file matches the workflow contract.</li>';
+    const extraColumns = workflow.extraColumns.length
+      ? workflow.extraColumns.join(", ")
+      : workflow.config.allowExtraColumns
+        ? "allowed"
+        : "none";
+    const supportLabel = workflow.support ? workflow.support.label : "No included-fix window set.";
+
+    els.workflowScope.innerHTML = `
+      <div class="workflow-status ${escapeHtml(workflow.status)}">
+        <span>${escapeHtml(workflow.statusLabel)}</span>
+        <strong>${escapeHtml(workflow.config.workflowId)} v${escapeHtml(workflow.config.version)}</strong>
+      </div>
+      <div class="workflow-facts">
+        <span>Source format <strong>${escapeHtml(workflow.config.sourceFormat)}</strong></span>
+        <span>CRM target <strong>${escapeHtml(workflow.config.crmTarget)}</strong></span>
+        <span>Matched columns <strong>${number(workflow.matchedColumns.length)} / ${number(workflow.config.expectedColumns.length)}</strong></span>
+        <span>Missing required <strong>${number(workflow.missingRequiredColumns.length)}</strong></span>
+        <span>Extra columns <strong>${escapeHtml(extraColumns)}</strong></span>
+        <span>Included fixes <strong>${escapeHtml(supportLabel)}</strong></span>
+      </div>
+      <ul class="issue-list">${issueHtml}</ul>`;
   }
 
   function renderFieldMapping(exported) {
@@ -352,6 +501,7 @@
     const report = rescue.buildMarkdownReport(state.table, state.analysis, state.cleaned, {
       exported: state.exported,
       crm: state.crm,
+      workflow: state.workflow,
     });
     const base = state.fileName.replace(/\.[^.]+$/, "") || "data";
     downloadBlob(report, `${base}-crm-import-report.md`, "text/markdown;charset=utf-8");
@@ -364,6 +514,7 @@
     const issueExport = rescue.buildIssueExport(state.table, state.analysis, {
       exported: state.exported,
       crm: state.crm,
+      workflow: state.workflow,
     });
     const csv = rescue.toDelimited(issueExport.headers, issueExport.rows, ",");
     const base = state.fileName.replace(/\.[^.]+$/, "") || "data";
@@ -377,6 +528,7 @@
     const report = rescue.buildMarkdownReport(state.table, state.analysis, state.cleaned, {
       exported: state.exported,
       crm: state.crm,
+      workflow: state.workflow,
     });
     await copyText(report);
     setStatus("Report copied.");
@@ -420,6 +572,16 @@ Fixed-scope CRM import rescue starts at $199, with a $49 sample audit. If you se
   function setStatus(message, isError) {
     els.statusLine.textContent = message;
     els.statusLine.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function setWorkflowStatus(message, isError) {
+    els.workflowStatusLine.textContent = message;
+    els.workflowStatusLine.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function fileStatusMessage(exported, workflow) {
+    const base = `${state.fileName} mapped for ${exported.presetLabel}.`;
+    return workflow ? `${base} ${workflow.statusLabel}.` : base;
   }
 
   function delimiterName(delimiter) {
